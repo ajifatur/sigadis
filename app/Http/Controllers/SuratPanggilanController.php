@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ajifatur\Helpers\DateTimeExt;
 use PDF;
-use DataTables;
+use App\Models\Terduga;
 use App\Models\SuratPanggilan;
 
 class SuratPanggilanController extends Controller
@@ -23,38 +23,27 @@ class SuratPanggilanController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // SIMPEG
-        $simpeg = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/list_doskar_by_key/10/1");
-        $simpeg = json_decode($simpeg, true);
-
-        // Surat panggilan
-        $surat = SuratPanggilan::orderBy('created_at','desc')->orderBy('panggilan','asc')->get();
-        foreach($surat as $key=>$s) {
-            foreach($simpeg as $si) {
-                if($si['nip'] == $s->terlapor) $s->terlapor = $si;
-                if($si['nip'] == $s->menghadap_kepada) $s->menghadap_kepada = $si;
-                if($si['nip'] == $s->ttd) $s->ttd = $si;
-            }
-        }
-
-        // View
-        return view('admin/surat-panggilan/index', [
-            'surat' => $surat
-        ]);
+        abort(404);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
+        // Terduga
+        $terduga = Terduga::findOrFail($id);
+
         // View
-        return view('admin/surat-panggilan/create');
+        return view('admin/surat-panggilan/create', [
+            'terduga' => $terduga
+        ]);
     }
 
     /**
@@ -67,16 +56,14 @@ class SuratPanggilanController extends Controller
     {
         // Validation
         $validator = Validator::make($request->all(), [
-            'panggilan' => 'required',
-            'terlapor' => 'required',
             'menghadap_kepada' => 'required',
             'tanggal' => 'required',
             'jam' => 'required',
             'tempat' => 'required',
             'status' => 'required',
             'pelanggaran' => 'required',
+            'status_atasan' => 'required',
             'atasan' => 'required',
-            'ttd' => 'required',
         ]);
         
         // Check errors
@@ -85,23 +72,69 @@ class SuratPanggilanController extends Controller
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
         else {
+            // SIMPEG Terlapor
+            $simpeg_terlapor = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$request->terlapor);
+            $simpeg_terlapor = json_decode($simpeg_terlapor);
+            $simpeg_terlapor = $simpeg_terlapor->value;
+            $p = explode(' ', $simpeg_terlapor->pangkat);
+            array_pop($p);
+            $simpeg_terlapor->pangkat = implode(' ', $p);
+
+            // SIMPEG Menghadap Kepada
+            $simpeg_menghadap_kepada = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$request->menghadap_kepada);
+            $simpeg_menghadap_kepada = json_decode($simpeg_menghadap_kepada);
+            $simpeg_menghadap_kepada = $simpeg_menghadap_kepada->value;
+            $p = explode(' ', $simpeg_menghadap_kepada->pangkat);
+            array_pop($p);
+            $simpeg_menghadap_kepada->pangkat = implode(' ', $p);
+
+            // SIMPEG Atasan
+            $simpeg_atasan = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$request->atasan);
+            $simpeg_atasan = json_decode($simpeg_atasan);
+            $simpeg_atasan = $simpeg_atasan->value;
+            $p = explode(' ', $simpeg_atasan->pangkat);
+            array_pop($p);
+            $simpeg_atasan->pangkat = implode(' ', $p);
+
             // Simpan surat panggilan
-            $surat = new SuratPanggilan;
+            $surat = SuratPanggilan::find($request->id);
+            if(!$surat) $surat = new SuratPanggilan;
+            $surat->terduga_id = $request->terduga_id;
             $surat->panggilan = $request->panggilan;
             $surat->terlapor = $request->terlapor;
+            $surat->terlapor_json = json_encode([
+                'nama' => fullname($simpeg_terlapor->nama, $simpeg_terlapor->gelar_dpn, $simpeg_terlapor->gelar_blk),
+                'nip' => $simpeg_terlapor->nip_bar,
+                'pangkat' => $simpeg_terlapor->pangkat,
+                'jabatan' => $simpeg_terlapor->jabatan,
+                'unit' => $simpeg_terlapor->nama_unit,
+            ]);
             $surat->menghadap_kepada = $request->menghadap_kepada;
-            $surat->hari = date('w', strtotime(DateTimeExt::change($request->tanggal)));
+            $surat->menghadap_kepada_json = json_encode([
+                'nama' => fullname($simpeg_menghadap_kepada->nama, $simpeg_menghadap_kepada->gelar_dpn, $simpeg_menghadap_kepada->gelar_blk),
+                'nip' => $simpeg_menghadap_kepada->nip_bar,
+                'pangkat' => $simpeg_menghadap_kepada->pangkat,
+                'jabatan' => $simpeg_menghadap_kepada->jabatan,
+                'unit' => $simpeg_menghadap_kepada->nama_unit,
+            ]);
             $surat->tanggal = DateTimeExt::change($request->tanggal);
             $surat->jam = $request->jam.':00';
             $surat->tempat = $request->tempat;
             $surat->status = $request->status;
             $surat->pelanggaran = $request->pelanggaran;
+            $surat->status_atasan = $request->status_atasan;
             $surat->atasan = $request->atasan;
-            $surat->ttd = $request->ttd;
+            $surat->atasan_json = json_encode([
+                'nama' => fullname($simpeg_atasan->nama, $simpeg_atasan->gelar_dpn, $simpeg_atasan->gelar_blk),
+                'nip' => $simpeg_atasan->nip_bar,
+                'pangkat' => $simpeg_atasan->pangkat,
+                'jabatan' => $simpeg_atasan->jabatan,
+                'unit' => $simpeg_atasan->nama_unit,
+            ]);
             $surat->save();
 
             // Redirect
-            return redirect()->route('admin.surat-panggilan.index')->with(['message' => 'Berhasil menambah data.']);
+            return redirect()->route('admin.terduga.detail', ['id' => $request->terduga_id])->with(['message' => 'Berhasil memperbarui data.']);
         }
     }
 
@@ -111,66 +144,22 @@ class SuratPanggilanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, $surat_id)
     {
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
+        // Terduga
+        $terduga = Terduga::findOrFail($id);
+
         // Surat panggilan
-        $surat = SuratPanggilan::findOrFail($id);
+        $surat = SuratPanggilan::findOrFail($surat_id);
 
         // View
         return view('admin/surat-panggilan/edit', [
+            'terduga' => $terduga,
             'surat' => $surat
         ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        // Validation
-        $validator = Validator::make($request->all(), [
-            'panggilan' => 'required',
-            'terlapor' => 'required',
-            'menghadap_kepada' => 'required',
-            'tanggal' => 'required',
-            'jam' => 'required',
-            'tempat' => 'required',
-            'status' => 'required',
-            'pelanggaran' => 'required',
-            'atasan' => 'required',
-            'ttd' => 'required',
-        ]);
-        
-        // Check errors
-        if($validator->fails()) {
-            // Back to form page with validation error messages
-            return redirect()->back()->withErrors($validator->errors())->withInput();
-        }
-        else {
-            // Mengupdate surat panggilan
-            $surat = SuratPanggilan::find($request->id);
-            $surat->panggilan = $request->panggilan;
-            $surat->terlapor = $request->terlapor;
-            $surat->menghadap_kepada = $request->menghadap_kepada;
-            $surat->hari = date('w', strtotime(DateTimeExt::change($request->tanggal)));
-            $surat->tanggal = DateTimeExt::change($request->tanggal);
-            $surat->jam = $request->jam.':00';
-            $surat->tempat = $request->tempat;
-            $surat->status = $request->status;
-            $surat->pelanggaran = $request->pelanggaran;
-            $surat->atasan = $request->atasan;
-            $surat->ttd = $request->ttd;
-            $surat->save();
-
-            // Redirect
-            return redirect()->route('admin.surat-panggilan.index')->with(['message' => 'Berhasil mengupdate data.']);
-        }
     }
 
     /**
@@ -189,7 +178,7 @@ class SuratPanggilanController extends Controller
         $surat->delete();
 
         // Redirect
-        return redirect()->route('admin.surat-panggilan.index')->with(['message' => 'Berhasil menghapus data.']);
+        return redirect()->route('admin.terduga.detail', ['id' => $surat->terduga->id])->with(['message' => 'Berhasil menghapus data.']);
     }
 
     /**
@@ -206,20 +195,10 @@ class SuratPanggilanController extends Controller
         // Surat panggilan
         $surat = SuratPanggilan::findOrFail($id);
 
-        // Terlapor
-        $terlapor = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$surat->terlapor);
-        $terlapor = json_decode($terlapor);
-        $surat->terlapor = $terlapor->value;
-
-        // Menghadap kepada
-        $menghadap_kepada = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$surat->menghadap_kepada);
-        $menghadap_kepada = json_decode($menghadap_kepada);
-        $surat->menghadap_kepada = $menghadap_kepada->value;
-
-        // Atasan
-        $ttd = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$surat->ttd);
-        $ttd = json_decode($ttd);
-        $surat->ttd = $ttd->value;
+        // JSON decode
+        $surat->terlapor_json = json_decode($surat->terlapor_json);
+        $surat->menghadap_kepada_json = json_decode($surat->menghadap_kepada_json);
+        $surat->atasan_json = json_decode($surat->atasan_json);
 
         // Panggilan
         $length = $surat->panggilan;
@@ -235,6 +214,6 @@ class SuratPanggilanController extends Controller
         $pdf = PDF::loadView('admin/surat-panggilan/print', [
             'surat' => $surat
         ]);
-        return $pdf->stream('Surat Panggilan '.$surat->panggilan.' - '.$surat->terlapor->nip_bar.'.pdf');
+        return $pdf->stream('Surat Panggilan '.$surat->panggilan.' - '.$surat->terduga->terduga_nip.'.pdf');
     }
 }

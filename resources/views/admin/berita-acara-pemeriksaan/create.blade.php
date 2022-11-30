@@ -198,8 +198,8 @@
                 $("select[name=terlapor], select.pemeriksa").html(html);
             }
         });
+        $("select[name=terlapor], select.pemeriksa").select2();
     });
-    $("select[name=terlapor], select.pemeriksa").select2();
 
     // Tambah Pemeriksa
     $(document).on("click", "#tim-pemeriksa .btn-add-row", function(e) {

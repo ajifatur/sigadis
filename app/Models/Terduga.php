@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SuratPanggilan extends Model
+class Terduga extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class SuratPanggilan extends Model
      *
      * @var string
      */
-    protected $table = 'tbl_surat_panggilan';
+    protected $table = 'tbl_terduga';
 
     /**
      * The attributes that are mass assignable.
@@ -26,10 +26,10 @@ class SuratPanggilan extends Model
     ];
     
     /**
-     * Terduga.
+     * Surat panggilan.
      */
-    public function terduga()
+    public function surat_panggilan()
     {
-        return $this->belongsTo(Terduga::class, 'terduga_id');
+        return $this->hasMany(SuratPanggilan::class);
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Surat Panggilan {{ $surat->panggilan }} - {{ $surat->terlapor->nip_bar }}</title>
+    <title>Surat Panggilan {{ $surat->panggilan }} - {{ $surat->terduga->terduga_nip }}</title>
     <style>
         @page {margin: 0px;}
 		html {margin: 0px;}
@@ -28,32 +28,27 @@
         <tr>
             <td width="100">Nama</td>
             <td width="5">:</td>
-            <td width="100%">{{ fullname($surat->terlapor->nama, $surat->terlapor->gelar_dpn, $surat->terlapor->gelar_blk) }}</td>
+            <td width="100%">{{ $surat->terlapor_json->nama }}</td>
         </tr>
         <tr>
             <td>NIP</td>
             <td>:</td>
-            <td>{{ $surat->terlapor->nip_bar }}</td>
+            <td>{{ $surat->terlapor_json->nip }}</td>
         </tr>
         <tr>
             <td>Pangkat</td>
             <td>:</td>
-            <?php
-                $p = explode(' ', $surat->terlapor->pangkat);
-                array_pop($p);
-                $surat->terlapor->pangkat = implode(' ', $p);
-            ?>
-            <td>{{ $surat->terlapor->pangkat }}</td>
+            <td>{{ $surat->terlapor_json->pangkat }}</td>
         </tr>
         <tr>
             <td>Jabatan</td>
             <td>:</td>
-            <td>{{ $surat->terlapor->jabatan }}</td>
+            <td>{{ $surat->terlapor_json->jabatan }}</td>
         </tr>
         <tr>
             <td>Unit Kerja</td>
             <td>:</td>
-            <td>{{ $surat->terlapor->nama_unit }}</td>
+            <td>{{ $surat->terlapor_json->unit }}</td>
         </tr>
         <tr>
             <td colspan="3">untuk menghadap kepada</td>
@@ -61,27 +56,22 @@
         <tr>
             <td>Nama</td>
             <td>:</td>
-            <td>{{ fullname($surat->menghadap_kepada->nama, $surat->menghadap_kepada->gelar_dpn, $surat->menghadap_kepada->gelar_blk) }}</td>
+            <td>{{ $surat->menghadap_kepada_json->nama }}</td>
         </tr>
         <tr>
             <td>NIP</td>
             <td>:</td>
-            <td>{{ $surat->menghadap_kepada->nip_bar }}</td>
+            <td>{{ $surat->menghadap_kepada_json->nip }}</td>
         </tr>
         <tr>
             <td>Pangkat</td>
             <td>:</td>
-            <?php
-                $p = explode(' ', $surat->menghadap_kepada->pangkat);
-                array_pop($p);
-                $surat->menghadap_kepada->pangkat = implode(' ', $p);
-            ?>
-            <td>{{ $surat->menghadap_kepada->pangkat }}</td>
+            <td>{{ $surat->menghadap_kepada_json->pangkat }}</td>
         </tr>
         <tr>
             <td>Jabatan</td>
             <td>:</td>
-            <td>{{ $surat->menghadap_kepada->jabatan }}</td>
+            <td>{{ $surat->menghadap_kepada_json->jabatan }}</td>
         </tr>
         <tr>
             <td colspan="3">pada</td>
@@ -118,11 +108,11 @@
         <tr>
             <td width="50%"></td>
             <td width="50%" align="center">
-                <div>Semarang, {{ $surat->tanggalIndo }}</div>
-                <div>{{ $surat->atasan == 1 ? 'Atasan langsung' : 'Ketua Tim Pemeriksa' }}</div>
+                <div>Semarang, {{ \Ajifatur\Helpers\DateTimeExt::full(date('Y-m-d', strtotime($surat->created_at))) }}</div>
+                <div>{{ $surat->status_atasan == 1 ? 'Atasan langsung' : 'Ketua Tim Pemeriksa' }}</div>
                 <br><br><br><br>
-                <div>{{ fullname($surat->ttd->nama, $surat->ttd->gelar_dpn, $surat->ttd->gelar_blk) }}</div>
-                <div>NIP {{ $surat->ttd->nip_bar }}</div>
+                <div>{{ $surat->atasan_json->nama }}</div>
+                <div>NIP {{ $surat->atasan_json->nip }}</div>
             </td>
         </tr>
     </table>

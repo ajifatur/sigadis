@@ -18,13 +18,20 @@ Route::get('/', function () {
 });
 
 Route::group(['middleware' => ['faturhelper.admin']], function() {
+    // Terduga
+    Route::get('/admin/terduga', 'TerdugaController@index')->name('admin.terduga.index');
+    Route::get('/admin/terduga/create', 'TerdugaController@create')->name('admin.terduga.create');
+    Route::post('/admin/terduga/store', 'TerdugaController@store')->name('admin.terduga.store');
+    Route::get('/admin/terduga/detail/{id}', 'TerdugaController@detail')->name('admin.terduga.detail');
+    Route::get('/admin/terduga/edit/{id}', 'TerdugaController@edit')->name('admin.terduga.edit');
+    Route::post('/admin/terduga/update', 'TerdugaController@update')->name('admin.terduga.update');
+    Route::post('/admin/terduga/delete', 'TerdugaController@delete')->name('admin.terduga.delete');
+
     // Surat Panggilan
-    Route::get('/admin/surat-panggilan', 'SuratPanggilanController@index')->name('admin.surat-panggilan.index');
-    Route::get('/admin/surat-panggilan/create', 'SuratPanggilanController@create')->name('admin.surat-panggilan.create');
+    // Route::get('/admin/surat-panggilan', 'SuratPanggilanController@index')->name('admin.surat-panggilan.index');
+    Route::get('/admin/terduga/{id}/surat-panggilan/create', 'SuratPanggilanController@create')->name('admin.surat-panggilan.create');
+    Route::get('/admin/terduga/{id}/surat-panggilan/edit/{surat_id}', 'SuratPanggilanController@edit')->name('admin.surat-panggilan.edit');
     Route::post('/admin/surat-panggilan/store', 'SuratPanggilanController@store')->name('admin.surat-panggilan.store');
-    Route::get('/admin/surat-panggilan/detail/{id}', 'SuratPanggilanController@detail')->name('admin.surat-panggilan.detail');
-    Route::get('/admin/surat-panggilan/edit/{id}', 'SuratPanggilanController@edit')->name('admin.surat-panggilan.edit');
-    Route::post('/admin/surat-panggilan/update', 'SuratPanggilanController@update')->name('admin.surat-panggilan.update');
     Route::post('/admin/surat-panggilan/delete', 'SuratPanggilanController@delete')->name('admin.surat-panggilan.delete');
     Route::get('/admin/surat-panggilan/print/{id}', 'SuratPanggilanController@print')->name('admin.surat-panggilan.print');
 
