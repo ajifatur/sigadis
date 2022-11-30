@@ -11,7 +11,7 @@
 	<div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form method="post" action="{{ route('admin.berita-acara-pemeriksaan.update') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('admin.bap.update') }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" value="{{ $berita->id }}">
                     <div class="row mb-3">
@@ -174,7 +174,7 @@
                         <!-- <div class="col-lg-2 col-md-3"></div> -->
                         <div class="col-lg-10 col-md-9">
                             <button type="submit" class="btn btn-sm btn-primary"><i class="bi-save me-1"></i> Submit</button>
-                            <a href="{{ route('admin.berita-acara-pemeriksaan.index') }}" class="btn btn-sm btn-secondary"><i class="bi-arrow-left me-1"></i> Kembali</a>
+                            <a href="{{ route('admin.bap.index') }}" class="btn btn-sm btn-secondary"><i class="bi-arrow-left me-1"></i> Kembali</a>
                         </div>
                     </div>
                 </form>

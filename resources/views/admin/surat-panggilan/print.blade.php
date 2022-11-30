@@ -108,7 +108,7 @@
         <tr>
             <td width="50%"></td>
             <td width="50%" align="center">
-                <div>Semarang, {{ \Ajifatur\Helpers\DateTimeExt::full(date('Y-m-d', strtotime($surat->created_at))) }}</div>
+                <div>Semarang, {{ \Ajifatur\Helpers\DateTimeExt::full(date('Y-m-d', strtotime($surat->tanggal_surat))) }}</div>
                 <div>{{ $surat->status_atasan == 1 ? 'Atasan langsung' : 'Ketua Tim Pemeriksa' }}</div>
                 <br><br><br><br>
                 <div>{{ $surat->atasan_json->nama }}</div>

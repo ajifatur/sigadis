@@ -64,6 +64,7 @@ class SuratPanggilanController extends Controller
             'pelanggaran' => 'required',
             'status_atasan' => 'required',
             'atasan' => 'required',
+            'tanggal_surat' => 'required',
         ]);
         
         // Check errors
@@ -131,6 +132,7 @@ class SuratPanggilanController extends Controller
                 'jabatan' => $simpeg_atasan->jabatan,
                 'unit' => $simpeg_atasan->nama_unit,
             ]);
+            $surat->tanggal_surat = DateTimeExt::change($request->tanggal_surat);
             $surat->save();
 
             // Redirect

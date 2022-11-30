@@ -28,7 +28,6 @@ Route::group(['middleware' => ['faturhelper.admin']], function() {
     Route::post('/admin/terduga/delete', 'TerdugaController@delete')->name('admin.terduga.delete');
 
     // Surat Panggilan
-    // Route::get('/admin/surat-panggilan', 'SuratPanggilanController@index')->name('admin.surat-panggilan.index');
     Route::get('/admin/terduga/{id}/surat-panggilan/create', 'SuratPanggilanController@create')->name('admin.surat-panggilan.create');
     Route::get('/admin/terduga/{id}/surat-panggilan/edit/{surat_id}', 'SuratPanggilanController@edit')->name('admin.surat-panggilan.edit');
     Route::post('/admin/surat-panggilan/store', 'SuratPanggilanController@store')->name('admin.surat-panggilan.store');
@@ -36,14 +35,14 @@ Route::group(['middleware' => ['faturhelper.admin']], function() {
     Route::get('/admin/surat-panggilan/print/{id}', 'SuratPanggilanController@print')->name('admin.surat-panggilan.print');
 
     // Berita Acara Pemeriksaan
-    Route::get('/admin/berita-acara-pemeriksaan', 'BeritaAcaraPemeriksaanController@index')->name('admin.berita-acara-pemeriksaan.index');
-    Route::get('/admin/berita-acara-pemeriksaan/create', 'BeritaAcaraPemeriksaanController@create')->name('admin.berita-acara-pemeriksaan.create');
-    Route::post('/admin/berita-acara-pemeriksaan/store', 'BeritaAcaraPemeriksaanController@store')->name('admin.berita-acara-pemeriksaan.store');
-    Route::get('/admin/berita-acara-pemeriksaan/detail/{id}', 'BeritaAcaraPemeriksaanController@detail')->name('admin.berita-acara-pemeriksaan.detail');
-    Route::get('/admin/berita-acara-pemeriksaan/edit/{id}', 'BeritaAcaraPemeriksaanController@edit')->name('admin.berita-acara-pemeriksaan.edit');
-    Route::post('/admin/berita-acara-pemeriksaan/update', 'BeritaAcaraPemeriksaanController@update')->name('admin.berita-acara-pemeriksaan.update');
-    Route::post('/admin/berita-acara-pemeriksaan/delete', 'BeritaAcaraPemeriksaanController@delete')->name('admin.berita-acara-pemeriksaan.delete');
-    Route::get('/admin/berita-acara-pemeriksaan/print/{id}', 'BeritaAcaraPemeriksaanController@print')->name('admin.berita-acara-pemeriksaan.print');
+    Route::get('/admin/bap', 'BAPController@index')->name('admin.bap.index');
+    Route::get('/admin/bap/create', 'BAPController@create')->name('admin.bap.create');
+    Route::post('/admin/bap/store', 'BAPController@store')->name('admin.bap.store');
+    Route::get('/admin/bap/detail/{id}', 'BAPController@detail')->name('admin.bap.detail');
+    Route::get('/admin/bap/edit/{id}', 'BAPController@edit')->name('admin.bap.edit');
+    Route::post('/admin/bap/update', 'BAPController@update')->name('admin.bap.update');
+    Route::post('/admin/bap/delete', 'BAPController@delete')->name('admin.bap.delete');
+    Route::get('/admin/bap/print/{id}', 'BAPController@print')->name('admin.bap.print');
 });
 
 \Ajifatur\Helpers\RouteExt::auth();

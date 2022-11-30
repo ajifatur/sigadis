@@ -7,11 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ajifatur\Helpers\DateTimeExt;
 use PDF;
-use DataTables;
-use App\Models\BeritaAcaraPemeriksaan;
+use App\Models\BAP;
 use App\Models\TimPemeriksa;
 
-class BeritaAcaraPemeriksaanController extends Controller
+class BAPController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -29,7 +28,7 @@ class BeritaAcaraPemeriksaanController extends Controller
         $simpeg = json_decode($simpeg, true);
 
         // Berita acara pemeriksaan
-        $berita = BeritaAcaraPemeriksaan::orderBy('created_at','desc')->get();
+        $berita = BAP::orderBy('created_at','desc')->get();
         foreach($berita as $key=>$b) {
             foreach($simpeg as $si) {
                 if($si['nip'] == $b->terlapor) $b->terlapor = $si;
@@ -37,7 +36,7 @@ class BeritaAcaraPemeriksaanController extends Controller
         }
 
         // View
-        return view('admin/berita-acara-pemeriksaan/index', [
+        return view('admin/bap/index', [
             'berita' => $berita
         ]);
     }
@@ -53,7 +52,7 @@ class BeritaAcaraPemeriksaanController extends Controller
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
         // View
-        return view('admin/berita-acara-pemeriksaan/create');
+        return view('admin/bap/create');
     }
 
     /**
@@ -89,7 +88,7 @@ class BeritaAcaraPemeriksaanController extends Controller
             ];
 
             // Simpan berita acara pemeriksaan
-            $berita = new BeritaAcaraPemeriksaan;
+            $berita = new BAP;
             $berita->hari = date('w', strtotime(DateTimeExt::change($request->tanggal)));
             $berita->tanggal = DateTimeExt::change($request->tanggal);
             $berita->pemeriksa = $request->saya_pemeriksa;
@@ -110,7 +109,7 @@ class BeritaAcaraPemeriksaanController extends Controller
             }
 
             // Redirect
-            return redirect()->route('admin.berita-acara-pemeriksaan.index')->with(['message' => 'Berhasil menambah data.']);
+            return redirect()->route('admin.bap.index')->with(['message' => 'Berhasil menambah data.']);
         }
     }
 
@@ -126,11 +125,11 @@ class BeritaAcaraPemeriksaanController extends Controller
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
         // Berita acara pemeriksaan
-        $berita = BeritaAcaraPemeriksaan::findOrFail($id);
+        $berita = BAP::findOrFail($id);
         $berita->qna = json_decode($berita->qna, true);
 
         // View
-        return view('admin/berita-acara-pemeriksaan/edit', [
+        return view('admin/bap/edit', [
             'berita' => $berita
         ]);
     }
@@ -168,7 +167,7 @@ class BeritaAcaraPemeriksaanController extends Controller
             ];
 
             // Mengupdate Berita acara pemeriksaan
-            $berita = BeritaAcaraPemeriksaan::find($request->id);
+            $berita = BAP::find($request->id);
             $berita->hari = date('w', strtotime(DateTimeExt::change($request->tanggal)));
             $berita->tanggal = DateTimeExt::change($request->tanggal);
             $berita->pemeriksa = $request->saya_pemeriksa;
@@ -199,7 +198,7 @@ class BeritaAcaraPemeriksaanController extends Controller
             }
 
             // Redirect
-            return redirect()->route('admin.berita-acara-pemeriksaan.index')->with(['message' => 'Berhasil mengupdate data.']);
+            return redirect()->route('admin.bap.index')->with(['message' => 'Berhasil mengupdate data.']);
         }
     }
 
@@ -215,11 +214,11 @@ class BeritaAcaraPemeriksaanController extends Controller
         // has_access(method(__METHOD__), Auth::user()->role_id);
         
         // Menghapus Berita acara pemeriksaan
-        $berita = BeritaAcaraPemeriksaan::find($request->id);
+        $berita = BAP::find($request->id);
         $berita->delete();
 
         // Redirect
-        return redirect()->route('admin.berita-acara-pemeriksaan.index')->with(['message' => 'Berhasil menghapus data.']);
+        return redirect()->route('admin.bap.index')->with(['message' => 'Berhasil menghapus data.']);
     }
 
     /**
@@ -234,7 +233,7 @@ class BeritaAcaraPemeriksaanController extends Controller
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
         // Berita acara pemeriksaan
-        $berita = BeritaAcaraPemeriksaan::findOrFail($id);
+        $berita = BAP::findOrFail($id);
 
         // Terlapor
         $terlapor = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$berita->terlapor);
@@ -254,7 +253,7 @@ class BeritaAcaraPemeriksaanController extends Controller
         $berita->qna = json_decode($berita->qna, true);
 
         // PDF
-        $pdf = PDF::loadView('admin/berita-acara-pemeriksaan/print', [
+        $pdf = PDF::loadView('admin/bap/print', [
             'berita' => $berita
         ]);
         return $pdf->stream('Berita Acara Pemeriksaan - '.$berita->terlapor->nip_bar.'.pdf');

@@ -36,7 +36,7 @@
                                 <td>
                                     Surat:
                                     <br>
-                                    {{ $surat_panggilan_1 != null ? date('d/m/Y', strtotime($surat_panggilan_1->created_at)) : '-' }}
+                                    {{ $surat_panggilan_1 != null ? date('d/m/Y', strtotime($surat_panggilan_1->tanggal_surat)) : '-' }}
                                     <hr class="my-1">
                                     Pemanggilan:
                                     <br>
@@ -61,7 +61,7 @@
                                 <td>
                                     Surat:
                                     <br>
-                                    {{ $surat_panggilan_2 != null ? date('d/m/Y', strtotime($surat_panggilan_2->created_at)) : '-' }}
+                                    {{ $surat_panggilan_2 != null ? date('d/m/Y', strtotime($surat_panggilan_2->tanggal_surat)) : '-' }}
                                     <hr class="my-1">
                                     Pemanggilan:
                                     <br>

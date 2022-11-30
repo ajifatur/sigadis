@@ -120,6 +120,18 @@
                             @endif
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <label class="col-lg-2 col-md-3 col-form-label">Tanggal Surat <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="tanggal_surat" class="form-control form-control-sm {{ $errors->has('tanggal_surat') ? 'border-danger' : '' }}" value="{{ date('d/m/Y', strtotime($surat->tanggal_surat)) }}" autocomplete="off">
+                                <span class="input-group-text"><i class="bi-calendar2"></i></span>
+                            </div>
+                            @if($errors->has('tanggal_surat'))
+                            <div class="small text-danger">{{ $errors->first('tanggal_surat') }}</div>
+                            @endif
+                        </div>
+                    </div>
                     <hr>
                     <div class="row">
                         <div class="col-lg-2 col-md-3"></div>
@@ -140,7 +152,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-    Spandiv.DatePicker("input[name=tanggal]");
+    Spandiv.DatePicker("input[name=tanggal], input[name=tanggal_surat]");
     Spandiv.ClockPicker("input[name=jam]");
     
     // Select2 Server Side

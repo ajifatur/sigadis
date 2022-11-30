@@ -30,6 +30,6 @@ class TimPemeriksa extends Model
      */
     public function BAP()
     {
-        return $this->belongsTo(BeritaAcaraPemeriksaan::class, 'bap_id');
+        return $this->belongsTo(BAP::class, 'bap_id');
     }
 }

@@ -1,13 +1,13 @@
 @extends('faturhelper::layouts/admin/main')
 
-@section('title', 'Kelola Surat Panggilan')
+@section('title', 'Kelola Berita Acara Pemeriksaan')
 
 @section('content')
 
 <div class="d-sm-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-2 mb-sm-0">Kelola Surat Panggilan</h1>
+    <h1 class="h3 mb-2 mb-sm-0">Kelola Berita Acara Pemeriksaan</h1>
     <div class="btn-group">
-        <a href="{{ route('admin.surat-panggilan.create') }}" class="btn btn-sm btn-primary"><i class="bi-plus me-1"></i> Tambah Surat Panggilan</a>
+        <a href="{{ route('admin.bap.create') }}" class="btn btn-sm btn-primary"><i class="bi-plus me-1"></i> Tambah Berita Acara Pemeriksaan</a>
     </div>
 </div>
 <div class="row">
@@ -26,38 +26,30 @@
                             <tr>
                                 <th width="30"><input type="checkbox" class="form-check-input checkbox-all"></th>
                                 <th>Terlapor</th>
-                                <th>Menghadap Kepada</th>
-                                <th width="100">Panggilan</th>
                                 <th width="80">Tanggal</th>
                                 <th width="60">Opsi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($surat as $s)
+                            @foreach($berita as $b)
                             <tr>
                                 <td align="center"><input type="checkbox" class="form-check-input checkbox-one"></td>
                                 <td>
-                                    {{ fullname($s->terlapor['nama'], $s->terlapor['gelar_depan'], $s->terlapor['gelar_belakang']) }}
+                                    {{ fullname($b->terlapor['nama'], $b->terlapor['gelar_depan'], $b->terlapor['gelar_belakang']) }}
                                     <br>
-                                    <span class="small text-muted">{{ $s->terlapor['nip'] }}</span>
+                                    <span class="small text-muted">{{ $b->terlapor['nip'] }}</span>
                                 </td>
                                 <td>
-                                    {{ fullname($s->menghadap_kepada['nama'], $s->menghadap_kepada['gelar_depan'], $s->menghadap_kepada['gelar_belakang']) }}
+                                    <span class="d-none">{{ $b->tanggal }}</span>
+                                    {{ date('d/m/Y', strtotime($b->tanggal)) }}
                                     <br>
-                                    <span class="small text-muted">{{ $s->menghadap_kepada['nip'] }}</span>
-                                </td>
-                                <td>Panggilan {{ $s->panggilan }}</td>
-                                <td>
-                                    <span class="d-none">{{ $s->tanggal }}</span>
-                                    {{ date('d/m/Y', strtotime($s->tanggal)) }}
-                                    <br>
-                                    <span class="small text-muted">{{ date('H:i', strtotime($s->jam)) }} WIB</span>
+                                    <span class="small text-muted">{{ date('H:i', strtotime($b->jam)) }} WIB</span>
                                 </td>
                                 <td align="center">
                                     <div class="btn-group">
-                                        <a href="{{ route('admin.surat-panggilan.print', ['id' => $s->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
-                                        <a href="{{ route('admin.surat-panggilan.edit', ['id' => $s->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
-                                        <a href="#" class="btn btn-sm btn-danger btn-delete" data-id="{{ $s->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
+                                        <a href="{{ route('admin.bap.print', ['id' => $b->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
+                                        <a href="{{ route('admin.bap.edit', ['id' => $b->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                        <a href="#" class="btn btn-sm btn-danger btn-delete" data-id="{{ $b->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -70,7 +62,7 @@
 	</div>
 </div>
 
-<form class="form-delete d-none" method="post" action="{{ route('admin.surat-panggilan.delete') }}">
+<form class="form-delete d-none" method="post" action="{{ route('admin.bap.delete') }}">
     @csrf
     <input type="hidden" name="id">
 </form>
@@ -81,7 +73,7 @@
 
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
-<script type="text/javascript">    
+<script type="text/javascript">
     // DataTable
     Spandiv.DataTable("#datatable");
 

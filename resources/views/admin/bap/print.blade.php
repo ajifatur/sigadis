@@ -24,7 +24,7 @@
     </div>
     <table id="tabel-form">
         <tr>
-            <td colspan="4">Pada hari ini {{ $berita->hariIndo }}, tanggal {{ date('d', strtotime($berita->tanggal)) }}, bulan {{ $berita->bulanIndo }}, tahun {{ date('Y', strtotime($berita->tanggal)) }}, {{ $berita->pemeriksa == 1 ? 'Saya' : 'Tim Pemeriksa' }} masing-masing:</td>
+            <td colspan="4">Pada hari ini {{ $berita->hariIndo }}, tanggal {{ date('d', strtotime($berita->tanggal)) }}, bulan {{ $berita->bulanIndo }}, tahun {{ date('Y', strtotime($berita->tanggal)) }}, {{ $berita->pemeriksa == 1 ? 'Saya' : 'Tim Pemeriksa masing-masing' }}:</td>
         </tr>
         @foreach($berita->tim_pemeriksa as $key=>$p)
         <tr>
