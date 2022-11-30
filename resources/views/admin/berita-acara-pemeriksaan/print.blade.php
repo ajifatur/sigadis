@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Berita Acara Pemeriksaan</title>
+    <title>Berita Acara Pemeriksaan - {{ $berita->terlapor->nip_bar }}</title>
     <style>
         @page {margin: 0px;}
 		html {margin: 0px;}

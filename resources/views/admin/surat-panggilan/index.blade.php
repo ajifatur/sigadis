@@ -32,7 +32,37 @@
                                 <th width="60">Opsi</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                            @foreach($surat as $s)
+                            <tr>
+                                <td align="center"><input type="checkbox" class="form-check-input checkbox-one"></td>
+                                <td>
+                                    {{ fullname($s->terlapor['nama'], $s->terlapor['gelar_depan'], $s->terlapor['gelar_belakang']) }}
+                                    <br>
+                                    <span class="small text-muted">{{ $s->terlapor['nip'] }}</span>
+                                </td>
+                                <td>
+                                    {{ fullname($s->menghadap_kepada['nama'], $s->menghadap_kepada['gelar_depan'], $s->menghadap_kepada['gelar_belakang']) }}
+                                    <br>
+                                    <span class="small text-muted">{{ $s->menghadap_kepada['nip'] }}</span>
+                                </td>
+                                <td>Panggilan {{ $s->panggilan }}</td>
+                                <td>
+                                    <span class="d-none">{{ $s->tanggal }}</span>
+                                    {{ date('d/m/Y', strtotime($s->tanggal)) }}
+                                    <br>
+                                    <span class="small text-muted">{{ date('H:i', strtotime($s->jam)) }} WIB</span>
+                                </td>
+                                <td align="center">
+                                    <div class="btn-group">
+                                        <a href="{{ route('admin.surat-panggilan.print', ['id' => $s->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
+                                        <a href="{{ route('admin.surat-panggilan.edit', ['id' => $s->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                        <a href="#" class="btn btn-sm btn-danger btn-delete" data-id="{{ $s->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -51,22 +81,9 @@
 
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
-<script type="text/javascript">
+<script type="text/javascript">    
     // DataTable
-    Spandiv.DataTable("#datatable", {
-        serverSide: true,
-        pageLength: 25,
-        url: "{{ route('admin.surat-panggilan.index') }}",
-        columns: [
-            {data: 'checkbox', name: 'checkbox', className: 'text-center'},
-            {data: 'terlapor_text', name: 'terlapor_text'},
-            {data: 'menghadap_kepada_text', name: 'menghadap_kepada_text'},
-            {data: 'panggilan_text', name: 'panggilan_text'},
-            {data: 'datetime', name: 'datetime'},
-            {data: 'options', name: 'options', className: 'text-center', orderable: false},
-        ],
-        order: [4, 'desc']
-    });
+    Spandiv.DataTable("#datatable");
 
     // Button Delete
     Spandiv.ButtonDelete(".btn-delete", ".form-delete");

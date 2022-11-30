@@ -13,8 +13,6 @@ use App\Models\TimPemeriksa;
 
 class BeritaAcaraPemeriksaanController extends Controller
 {
-    public $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
-
     /**
      * Display a listing of the resource.
      *
@@ -26,45 +24,22 @@ class BeritaAcaraPemeriksaanController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        if($request->ajax()) {
-            // SIMPEG
-            $simpeg = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/list_doskar_by_key/10/1");
-            $simpeg = json_decode($simpeg, true);
+        // SIMPEG
+        $simpeg = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/list_doskar_by_key/10/1");
+        $simpeg = json_decode($simpeg, true);
 
-            // Berita acara pemeriksaan
-            $berita = BeritaAcaraPemeriksaan::orderBy('created_at','desc')->get();
-            foreach($berita as $key=>$b) {
-                foreach($simpeg as $si) {
-                    if($si['nip'] == $b->terlapor) $b->terlapor = $si;
-                }
+        // Berita acara pemeriksaan
+        $berita = BeritaAcaraPemeriksaan::orderBy('created_at','desc')->get();
+        foreach($berita as $key=>$b) {
+            foreach($simpeg as $si) {
+                if($si['nip'] == $b->terlapor) $b->terlapor = $si;
             }
-
-            return DataTables::of($berita)
-                ->addColumn('checkbox', '
-                    <input type="checkbox" class="form-check-input checkbox-one">
-                ')
-                ->addColumn('terlapor_text', '
-                    {{ fullname($terlapor["nama"], $terlapor["gelar_depan"], $terlapor["gelar_belakang"]) }}
-                    <br>
-                    <span class="small text-muted">{{ $terlapor["nip"] }}</span>
-                ')
-                ->addColumn('datetime', '
-                    <span class="d-none">{{ $tanggal }}</span>
-                    {{ date("d/m/Y", strtotime($tanggal)) }}
-                ')
-                ->addColumn('options', '
-                    <div class="btn-group">
-                        <a href="{{ route(\'admin.berita-acara-pemeriksaan.print\', [\'id\' => $id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
-                        <a href="{{ route(\'admin.berita-acara-pemeriksaan.edit\', [\'id\' => $id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
-                        <a href="#" class="btn btn-sm btn-danger btn-delete" data-id="{{ $id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
-                    </div>
-                ')
-                ->rawColumns(['checkbox', 'terlapor_text', 'datetime', 'options'])
-                ->make(true);
         }
 
         // View
-        return view('admin/berita-acara-pemeriksaan/index');
+        return view('admin/berita-acara-pemeriksaan/index', [
+            'berita' => $berita
+        ]);
     }
 
     /**
@@ -273,7 +248,7 @@ class BeritaAcaraPemeriksaanController extends Controller
             $p->pemeriksa = $tp->value;
         }
 
-        $berita->hariIndo = $this->days[$berita->hari];
+        $berita->hariIndo = DateTimeExt::day($berita->tanggal);;
         $berita->bulanIndo = DateTimeExt::month(date('m', strtotime($berita->tanggal)));
         $berita->tanggalIndo = DateTimeExt::full($berita->tanggal);
         $berita->qna = json_decode($berita->qna, true);
@@ -282,6 +257,6 @@ class BeritaAcaraPemeriksaanController extends Controller
         $pdf = PDF::loadView('admin/berita-acara-pemeriksaan/print', [
             'berita' => $berita
         ]);
-        return $pdf->stream('Berita Acara Pemeriksaan.pdf');
+        return $pdf->stream('Berita Acara Pemeriksaan - '.$berita->terlapor->nip_bar.'.pdf');
     }
 }

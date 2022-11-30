@@ -30,7 +30,31 @@
                                 <th width="60">Opsi</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                            @foreach($berita as $b)
+                            <tr>
+                                <td align="center"><input type="checkbox" class="form-check-input checkbox-one"></td>
+                                <td>
+                                    {{ fullname($b->terlapor['nama'], $b->terlapor['gelar_depan'], $b->terlapor['gelar_belakang']) }}
+                                    <br>
+                                    <span class="small text-muted">{{ $b->terlapor['nip'] }}</span>
+                                </td>
+                                <td>
+                                    <span class="d-none">{{ $b->tanggal }}</span>
+                                    {{ date('d/m/Y', strtotime($b->tanggal)) }}
+                                    <br>
+                                    <span class="small text-muted">{{ date('H:i', strtotime($b->jam)) }} WIB</span>
+                                </td>
+                                <td align="center">
+                                    <div class="btn-group">
+                                        <a href="{{ route('admin.berita-acara-pemeriksaan.print', ['id' => $b->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
+                                        <a href="{{ route('admin.berita-acara-pemeriksaan.edit', ['id' => $b->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                        <a href="#" class="btn btn-sm btn-danger btn-delete" data-id="{{ $b->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -51,18 +75,7 @@
 <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
 <script type="text/javascript">
     // DataTable
-    Spandiv.DataTable("#datatable", {
-        serverSide: true,
-        pageLength: 25,
-        url: "{{ route('admin.berita-acara-pemeriksaan.index') }}",
-        columns: [
-            {data: 'checkbox', name: 'checkbox', className: 'text-center'},
-            {data: 'terlapor_text', name: 'terlapor_text'},
-            {data: 'datetime', name: 'datetime'},
-            {data: 'options', name: 'options', className: 'text-center', orderable: false},
-        ],
-        order: [2, 'desc']
-    });
+    Spandiv.DataTable("#datatable");
 
     // Button Delete
     Spandiv.ButtonDelete(".btn-delete", ".form-delete");

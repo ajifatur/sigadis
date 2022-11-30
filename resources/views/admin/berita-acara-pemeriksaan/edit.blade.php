@@ -133,6 +133,7 @@
                         @if(count($berita->tim_pemeriksa) > 0)
                             @foreach($berita->tim_pemeriksa as $key=>$p)
                             <div class="row {{ $key > 0 ? 'mt-3' : '' }}">
+                                <input type="hidden" class="pemeriksa-nip" value="{{ $p->pemeriksa }}">
                                 <div class="col">
                                     <select name="pemeriksa[]" class="form-select form-select-sm pemeriksa">
                                         <option value="" disabled selected>--Pilih--</option>
@@ -199,11 +200,13 @@
             success: function(response) {
                 var html = '<option value="" disabled selected>--Pilih--</option>';
                 for(var i = 0; i < response.length; i++) {
-                    var selected = (key === response[i].nip) ? 'selected' : '';
-                    html += '<option value="' + response[i].nip + '" ' + selected + '>' + response[i].gelar_depan + response[i].nama + (response[i].gelar_belakang != '' ? ', ' + response[i].gelar_belakang : response[i].gelar_belakang) + ' (' + response[i].nip + ')' + '</option>';
+                    html += '<option value="' + response[i].nip + '">' + response[i].gelar_depan + response[i].nama + (response[i].gelar_belakang != '' ? ', ' + response[i].gelar_belakang : response[i].gelar_belakang) + ' (' + response[i].nip + ')' + '</option>';
                 }
                 $("select[name=terlapor], select.pemeriksa").html(html);
                 $("select[name=terlapor]").val("{{ $berita->terlapor }}");
+                $("input.pemeriksa-nip").each(function(key,elem) {
+                    $($("select.pemeriksa")[key]).val($(elem).val());
+                });
             }
         });
     });

@@ -12,8 +12,6 @@ use App\Models\SuratPanggilan;
 
 class SuratPanggilanController extends Controller
 {
-    public $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
-
     /**
      * Display a listing of the resource.
      *
@@ -25,62 +23,24 @@ class SuratPanggilanController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        if($request->ajax()) {
-            // SIMPEG
-            $simpeg = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/list_doskar_by_key/10/1");
-            $simpeg = json_decode($simpeg, true);
+        // SIMPEG
+        $simpeg = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/list_doskar_by_key/10/1");
+        $simpeg = json_decode($simpeg, true);
 
-            // Surat panggilan
-            $surat = SuratPanggilan::orderBy('created_at','desc')->orderBy('panggilan','asc')->get();
-            foreach($surat as $key=>$s) {
-                foreach($simpeg as $si) {
-                    if($si['nip'] == $s->terlapor) $s->terlapor = $si;
-                    if($si['nip'] == $s->menghadap_kepada) $s->menghadap_kepada = $si;
-                    if($si['nip'] == $s->ttd) $s->ttd = $si;
-                }
+        // Surat panggilan
+        $surat = SuratPanggilan::orderBy('created_at','desc')->orderBy('panggilan','asc')->get();
+        foreach($surat as $key=>$s) {
+            foreach($simpeg as $si) {
+                if($si['nip'] == $s->terlapor) $s->terlapor = $si;
+                if($si['nip'] == $s->menghadap_kepada) $s->menghadap_kepada = $si;
+                if($si['nip'] == $s->ttd) $s->ttd = $si;
             }
-
-            return DataTables::of($surat)
-                ->addColumn('checkbox', '
-                    <input type="checkbox" class="form-check-input checkbox-one">
-                ')
-                ->addColumn('terlapor_text', '
-                    {{ fullname($terlapor["nama"], $terlapor["gelar_depan"], $terlapor["gelar_belakang"]) }}
-                    <br>
-                    <span class="small text-muted">{{ $terlapor["nip"] }}</span>
-                ')
-                ->addColumn('menghadap_kepada_text', '
-                    {{ fullname($menghadap_kepada["nama"], $menghadap_kepada["gelar_depan"], $menghadap_kepada["gelar_belakang"]) }}
-                    <br>
-                    <span class="small text-muted">{{ $menghadap_kepada["nip"] }}</span>
-                ')
-                ->addColumn('panggilan_text', function($data) {
-                    $length = $data->panggilan;
-                    $text = '';
-                    for($i=1; $i<=$length; $i++) {
-                        $text .= 'I';
-                    }
-                    return 'Panggilan '.$text;
-                })
-                ->addColumn('datetime', '
-                    <span class="d-none">{{ $tanggal }}</span>
-                    {{ date("d/m/Y", strtotime($tanggal)) }}
-                    <br>
-                    <span class="small text-muted">{{ date("H:i", strtotime($jam)) }} WIB</span>
-                ')
-                ->addColumn('options', '
-                    <div class="btn-group">
-                        <a href="{{ route(\'admin.surat-panggilan.print\', [\'id\' => $id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
-                        <a href="{{ route(\'admin.surat-panggilan.edit\', [\'id\' => $id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
-                        <a href="#" class="btn btn-sm btn-danger btn-delete" data-id="{{ $id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
-                    </div>
-                ')
-                ->rawColumns(['checkbox', 'terlapor_text', 'menghadap_kepada_text', 'panggilan_text', 'datetime', 'options'])
-                ->make(true);
         }
 
         // View
-        return view('admin/surat-panggilan/index');
+        return view('admin/surat-panggilan/index', [
+            'surat' => $surat
+        ]);
     }
 
     /**
@@ -268,13 +228,13 @@ class SuratPanggilanController extends Controller
             $surat->panggilan .= 'I';
         }
 
-        $surat->hariIndo = $this->days[$surat->hari];
+        $surat->hariIndo = DateTimeExt::day($surat->tanggal);
         $surat->tanggalIndo = DateTimeExt::full($surat->tanggal);
 
         // PDF
         $pdf = PDF::loadView('admin/surat-panggilan/print', [
             'surat' => $surat
         ]);
-        return $pdf->stream('Surat Panggilan.pdf');
+        return $pdf->stream('Surat Panggilan '.$surat->panggilan.' - '.$surat->terlapor->nip_bar.'.pdf');
     }
 }
