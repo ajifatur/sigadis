@@ -1,13 +1,13 @@
 @extends('faturhelper::layouts/admin/main')
 
-@section('title', 'Kelola Terduga')
+@section('title', 'Kelola Kasus')
 
 @section('content')
 
 <div class="d-sm-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-2 mb-sm-0">Kelola Terduga</h1>
+    <h1 class="h3 mb-2 mb-sm-0">Kelola Kasus</h1>
     <div class="btn-group">
-        <a href="{{ route('admin.terduga.create') }}" class="btn btn-sm btn-primary"><i class="bi-plus me-1"></i> Tambah Terduga</a>
+        <a href="{{ route('admin.terduga.create') }}" class="btn btn-sm btn-primary"><i class="bi-plus me-1"></i> Tambah Kasus</a>
     </div>
 </div>
 <div class="row">

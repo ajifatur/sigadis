@@ -1,11 +1,11 @@
 @extends('faturhelper::layouts/admin/main')
 
-@section('title', 'Detail Terduga: '.$terduga->terduga_nama)
+@section('title', 'Detail Kasus')
 
 @section('content')
 
 <div class="d-sm-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-0">Detail Terduga: {{ $terduga->terduga_nama }}</h1>
+    <h1 class="h3 mb-0">Detail Kasus</h1>
 </div>
 <div class="row">
 	<div class="col-12">
@@ -17,6 +17,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 @endif
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item d-sm-flex justify-content-between p-0">
+                        <strong>Terduga:</strong>
+                        <div>{{ $terduga->terduga_nama }}</div>
+                    </li>
+                    <li class="list-group-item d-sm-flex justify-content-between p-0">
+                        <strong>Dugaan Pelanggaran:</strong>
+                        <div>{{ $terduga->dugaan_pelanggaran }}</div>
+                    </li>
+                </ul>
                 <div class="table-responsive">
                     <table class="table table-sm table-hover table-bordered">
                         <thead class="bg-light text-center">
