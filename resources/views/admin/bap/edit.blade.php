@@ -130,24 +130,10 @@
                     <hr>
                     <p class="fw-bold">Tim Pemeriksa:</p>
                     <div class="col" id="tim-pemeriksa">
-                        @if(count($berita->tim_pemeriksa) > 0)
-                            @foreach($berita->tim_pemeriksa as $key=>$p)
-                            <div class="row {{ $key > 0 ? 'mt-3' : '' }}">
-                                <input type="hidden" class="pemeriksa-nip" value="{{ $p->pemeriksa }}">
-                                <div class="col">
-                                    <select name="pemeriksa[]" class="form-select form-select-sm pemeriksa">
-                                        <option value="" disabled selected>--Pilih--</option>
-                                    </select>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="btn-group">
-                                        <a href="#" class="btn btn-sm btn-success btn-add-row" title="Tambah"><i class="bi-plus"></i></a>
-                                        <a href="#" class="btn btn-sm btn-danger btn-delete-row" title="Hapus"><i class="bi-trash"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        @endif
+                        <input type="hidden" class="pemeriksa-nip" value="{{ implode(',', $berita->tim_pemeriksa->pluck('pemeriksa')->toArray()) }}">
+                        <select name="pemeriksa[]" class="form-select form-select-sm pemeriksa" multiple="multiple">
+                            <option value="" disabled>--Pilih--</option>
+                        </select>
                     </div>
                     <hr>
                     <p class="fw-bold">Pertanyaan dan Jawaban:</p>
@@ -197,18 +183,25 @@
             type: "get",
             url: "{{ route('api.simpeg') }}",
             success: function(response) {
-                var html = '<option value="" disabled selected>--Pilih--</option>';
+                var html = '<option value="" disabled>--Pilih--</option>';
                 for(var i = 0; i < response.length; i++) {
                     html += '<option value="' + response[i].nip + '">' + response[i].gelar_depan + response[i].nama + (response[i].gelar_belakang != '' ? ', ' + response[i].gelar_belakang : response[i].gelar_belakang) + ' (' + response[i].nip + ')' + '</option>';
                 }
                 $("select[name=terlapor], select.pemeriksa").html(html);
                 $("select[name=terlapor]").val("{{ $berita->terlapor }}");
-                $("input.pemeriksa-nip").each(function(key,elem) {
-                    $($("select.pemeriksa")[key]).val($(elem).val());
+                $($("input.pemeriksa-nip").val().split(",")).each(function(key,value) {
+                    $("select.pemeriksa option[value=" + value + "]").prop("selected", true);
                 });
             }
         });
         $("select[name=terlapor], select.pemeriksa").select2();
+    });
+    $("select.pemeriksa").on("select2:select", function(evt) {
+        var element = evt.params.data.element;
+        var $element = $(element);
+        $element.detach();
+        $(this).append($element);
+        $(this).trigger("change");
     });
 
     // Tambah Pemeriksa
