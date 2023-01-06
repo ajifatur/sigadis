@@ -69,13 +69,17 @@
                                 <td>Surat Panggilan II</td>
                                 <td><em class="{{ $surat_panggilan_2 ? 'text-success' : 'text-danger' }}">{{ $surat_panggilan_2 ? 'Sudah dibuat' : 'Belum dibuat' }}</em></td>
                                 <td>
-                                    Surat:
-                                    <br>
-                                    {{ $surat_panggilan_2 != null ? date('d/m/Y', strtotime($surat_panggilan_2->tanggal_surat)) : '-' }}
-                                    <hr class="my-1">
-                                    Pemanggilan:
-                                    <br>
-                                    {{ $surat_panggilan_2 != null ? date('d/m/Y', strtotime($surat_panggilan_2->tanggal)) : '-' }}
+                                    @if($surat_panggilan_2 != null)
+                                        Surat:
+                                        <br>
+                                        {{ date('d/m/Y', strtotime($surat_panggilan_2->tanggal_surat)) }}
+                                        <hr class="my-1">
+                                        Pemanggilan:
+                                        <br>
+                                        {{ date('d/m/Y', strtotime($surat_panggilan_2->tanggal)) }}
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="btn-group">
@@ -94,7 +98,7 @@
                             <tr>
                                 <td align="right">3</td>
                                 <td>Berita Acara Pemeriksaan</td>
-                                <td><em class="text-danger">Belum</em></td>
+                                <td><em class="text-danger">Belum dibuat</em></td>
                                 <td>-</td>
                                 <td>-</td>
                             </tr>
