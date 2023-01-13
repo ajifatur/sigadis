@@ -13,6 +13,16 @@
             <div class="card-body">
                 <form method="post" action="{{ route('admin.bap.store') }}" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="id" value="">
+                    <input type="hidden" name="terduga_id" value="{{ $terduga->id }}">
+                    <input type="hidden" name="terlapor" value="{{ $terduga->terduga }}">
+                    <div class="row mb-3">
+                        <label class="col-lg-2 col-md-3 col-form-label">Terduga / Terlapor</label>
+                        <div class="col-lg-10 col-md-9">
+                            <input type="text" class="form-control form-control-sm" value="{{ $terduga->terduga_nama }} ({{ $terduga->terduga_nip }})" disabled>
+                        </div>
+                    </div>
+                    <hr>
                     <div class="row mb-3">
                         <label class="col-lg-2 col-md-3 col-form-label">Tanggal <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
@@ -29,16 +39,33 @@
                         <label class="col-lg-2 col-md-3 col-form-label">Pemeriksa <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="saya_pemeriksa" id="pemeriksa-1" value="1" {{ old('saya_pemeriksa') == '1' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="pemeriksa-1">Saya</label>
+                                <input class="form-check-input" type="radio" name="pemeriksa" id="pemeriksa-1" value="1" {{ old('pemeriksa') == '1' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="pemeriksa-1">Atasan Langsung</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="saya_pemeriksa" id="pemeriksa-2" value="2" {{ old('saya_pemeriksa') == '2' ? 'checked' : '' }}>
+                                <input class="form-check-input" type="radio" name="pemeriksa" id="pemeriksa-2" value="2" {{ old('pemeriksa') == '2' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="pemeriksa-2">Tim Pemeriksa</label>
                             </div>
-                            @if($errors->has('saya_pemeriksa'))
-                            <div class="small text-danger">{{ $errors->first('saya_pemeriksa') }}</div>
+                            @if($errors->has('pemeriksa'))
+                            <div class="small text-danger">{{ $errors->first('pemeriksa') }}</div>
                             @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3 d-none" id="atasan-langsung">
+                        @if($atasan)
+                        <label class="col-lg-2 col-md-3 col-form-label">Atasan Langsung</label>
+                        <div class="col-lg-10 col-md-9">
+                            <input type="text" class="form-control form-control-sm" value="{{ $atasan->nama }} ({{ $atasan->nip }})" disabled>
+                        </div>
+                        @endif
+                    </div>
+                    <div class="row mb-3 d-none" id="tim-pemeriksa">
+                        <label class="col-lg-2 col-md-3 col-form-label">Tim Pemeriksa</label>
+                        <div class="col-lg-10 col-md-9">
+                            <select name="tim_pemeriksa[]" class="form-select form-select-sm tim-pemeriksa" multiple="multiple">
+                                <option value="" disabled>--Pilih--</option>
+                            </select>
+                            <div class="small text-muted">Nama yang pertama adalah Ketua Tim Pemeriksa.</div>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -46,7 +73,7 @@
                         <div class="col-lg-10 col-md-9">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="wewenang" id="wewenang-1" value="1" {{ old('wewenang') == '1' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="wewenang-1">Saya</label>
+                                <label class="form-check-label" for="wewenang-1">Atasan Langsung</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="wewenang" id="wewenang-2" value="2" {{ old('wewenang') == '2' ? 'checked' : '' }}>
@@ -57,116 +84,58 @@
                             @endif
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <label class="col-lg-2 col-md-3 col-form-label">Terlapor <span class="text-danger">*</span></label>
+                    <div class="row mb-3 d-none" id="surat-perintah">
+                        <label class="col-lg-2 col-md-3 col-form-label">Surat Perintah <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
-                            <select name="terlapor" class="form-select form-select-sm {{ $errors->has('terlapor') ? 'border-danger' : '' }}">
-                                <option value="" disabled selected>--Pilih--</option>
-                            </select>
-                            @if($errors->has('terlapor'))
-                            <div class="small text-danger">{{ $errors->first('terlapor') }}</div>
+                            <input type="text" name="surat_perintah" class="form-control form-control-sm" value="{{ old('surat_perintah') }}">
+                            @if($errors->has('surat_perintah'))
+                            <div class="small text-danger">{{ $errors->first('surat_perintah') }}</div>
                             @endif
                         </div>
                     </div>
                     <hr>
-                    <p class="fw-bold">Yang dilanggar dalam PP No. 94 Tahun 2021:</p>
                     <div class="row mb-3">
-                        <label class="col-lg-2 col-md-3 col-form-label">Pasal <span class="text-danger">*</span></label>
+                        <label class="col-lg-2 col-md-3 col-form-label">Pelanggaran <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
-                            <select name="pasal" class="form-select form-select-sm {{ $errors->has('pasal') ? 'border-danger' : '' }}">
+                            <select name="pelanggaran" class="form-select form-select-sm">
                                 <option value="" disabled selected>--Pilih--</option>
-                                @for($i=1; $i<=10; $i++)
-                                <option value="{{ $i }}" {{ old('pasal') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
+                                @foreach($pelanggaran as $p)
+                                <option value="{{ $p->id }}" {{ old('pelanggaran') == $p->id ? 'selected' : '' }}>Pasal {{ $p->kl->pasal }} Huruf {{ $p->kl->huruf }} {{ $p->kl->angka != '' ? 'Angka '.$p->kl->angka : '' }} : {{ $p->kl->keterangan }} {{ $p->keterangan != '' ? '- '.$p->keterangan : '' }}</option>
+                                @endforeach
                             </select>
-                            @if($errors->has('pasal'))
-                            <div class="small text-danger">{{ $errors->first('pasal') }}</div>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-lg-2 col-md-3 col-form-label">Ayat <span class="text-danger">*</span></label>
-                        <div class="col-lg-10 col-md-9">
-                            <select name="ayat" class="form-select form-select-sm {{ $errors->has('ayat') ? 'border-danger' : '' }}">
-                                <option value="" disabled selected>--Pilih--</option>
-                                @for($i=1; $i<=10; $i++)
-                                <option value="{{ $i }}" {{ old('ayat') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
-                            </select>
-                            @if($errors->has('ayat'))
-                            <div class="small text-danger">{{ $errors->first('ayat') }}</div>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-lg-2 col-md-3 col-form-label">Huruf <span class="text-danger">*</span></label>
-                        <div class="col-lg-10 col-md-9">
-                            <select name="huruf" class="form-select form-select-sm {{ $errors->has('huruf') ? 'border-danger' : '' }}">
-                                <option value="" disabled selected>--Pilih--</option>
-                                @for($i=1; $i<=10; $i++)
-                                <option value="{{ $i }}" {{ old('huruf') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
-                            </select>
-                            @if($errors->has('huruf'))
-                            <div class="small text-danger">{{ $errors->first('huruf') }}</div>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-lg-2 col-md-3 col-form-label">Angka <span class="text-danger">*</span></label>
-                        <div class="col-lg-10 col-md-9">
-                            <select name="angka" class="form-select form-select-sm {{ $errors->has('angka') ? 'border-danger' : '' }}">
-                                <option value="" disabled selected>--Pilih--</option>
-                                @for($i=1; $i<=10; $i++)
-                                <option value="{{ $i }}" {{ old('angka') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
-                            </select>
-                            @if($errors->has('angka'))
-                            <div class="small text-danger">{{ $errors->first('angka') }}</div>
+                            @if($errors->has('pelanggaran'))
+                            <div class="small text-danger">{{ $errors->first('pelanggaran') }}</div>
                             @endif
                         </div>
                     </div>
                     <hr>
-                    <p class="fw-bold">Tim Pemeriksa:</p>
-                    <div class="col" id="tim-pemeriksa">
-                        <div class="row">
-                            <div class="col">
-                                <select name="pemeriksa[]" class="form-select form-select-sm pemeriksa">
-                                    <option value="" disabled selected>--Pilih--</option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <div class="btn-group">
-                                    <a href="#" class="btn btn-sm btn-success btn-add-row" title="Tambah"><i class="bi-plus"></i></a>
-                                    <a href="#" class="btn btn-sm btn-danger btn-delete-row" title="Hapus"><i class="bi-trash"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <p class="fw-bold">Pertanyaan dan Jawaban:</p>
-                    <div class="col" id="qna">
-                        <div class="row">
-                            <div class="col">
-                                <textarea name="pertanyaan[]" class="form-control form-control-sm" rows="3" placeholder="Pertanyaan"></textarea>
-                            </div>
-                            <div class="col">
-                                <textarea name="jawaban[]" class="form-control form-control-sm" rows="3" placeholder="Jawaban"></textarea>
-                            </div>
-                            <div class="col-auto">
-                                <div class="btn-group">
-                                    <a href="#" class="btn btn-sm btn-success btn-add-row" title="Tambah"><i class="bi-plus"></i></a>
-                                    <a href="#" class="btn btn-sm btn-danger btn-delete-row" title="Hapus"><i class="bi-trash"></i></a>
+                    <div class="row mb-3">
+                        <label class="col-lg-2 col-md-3 col-form-label">Pertanyaan dan Jawaban <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <div class="col" id="qna">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <textarea name="pertanyaan[]" class="form-control form-control-sm" rows="3" placeholder="Pertanyaan"></textarea>
+                                    </div>
+                                    <div class="col">
+                                        <textarea name="jawaban[]" class="form-control form-control-sm" rows="3" placeholder="Jawaban"></textarea>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="btn-group">
+                                            <a href="#" class="btn btn-sm btn-success btn-add-row" title="Tambah"><i class="bi-plus"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger btn-delete-row" title="Hapus"><i class="bi-trash"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
-                        <!-- <div class="col-lg-2 col-md-3"></div> -->
+                        <div class="col-lg-2 col-md-3"></div>
                         <div class="col-lg-10 col-md-9">
                             <button type="submit" class="btn btn-sm btn-primary"><i class="bi-save me-1"></i> Submit</button>
-                            <a href="{{ route('admin.bap.index') }}" class="btn btn-sm btn-secondary"><i class="bi-arrow-left me-1"></i> Kembali</a>
+                            <a href="{{ route('admin.terduga.detail', ['id' => $terduga->id]) }}" class="btn btn-sm btn-secondary"><i class="bi-arrow-left me-1"></i> Kembali</a>
                         </div>
                     </div>
                 </form>
@@ -185,59 +154,56 @@
 
     // Select2 Server Side
     $(window).on("load", function() {
-        var key = "";
         $.ajax({
             type: "get",
             url: "{{ route('api.simpeg') }}",
             success: function(response) {
-                var html = '<option value="" disabled selected>--Pilih--</option>';
+                var html = '';
                 for(var i = 0; i < response.length; i++) {
-                    var selected = (key === response[i].nip) ? 'selected' : '';
-                    html += '<option value="' + response[i].nip + '" ' + selected + '>' + response[i].gelar_depan + response[i].nama + (response[i].gelar_belakang != '' ? ', ' + response[i].gelar_belakang : response[i].gelar_belakang) + ' (' + response[i].nip + ')' + '</option>';
+                    html += '<option value="' + response[i].nip + '">' + response[i].gelar_depan + response[i].nama + (response[i].gelar_belakang != '' ? ', ' + response[i].gelar_belakang : response[i].gelar_belakang) + ' (' + response[i].nip + ')' + '</option>';
                 }
-                $("select[name=terlapor], select.pemeriksa").html(html);
+                $("select.tim-pemeriksa").html(html);
+                $("select.tim-pemeriksa option[value=" + "{{ $surat_panggilan_1->atasan }}" + "]").prop("selected", true);
             }
         });
-        $("select[name=terlapor], select.pemeriksa").select2();
+        $("select.tim-pemeriksa, select[name=pelanggaran]").select2();
+    });
+    $("select.tim-pemeriksa").on("select2:select", function(evt) {
+        var element = evt.params.data.element;
+        var $element = $(element);
+        $element.detach();
+        $(this).append($element);
+        $(this).trigger("change");
     });
 
-    // Tambah Pemeriksa
-    $(document).on("click", "#tim-pemeriksa .btn-add-row", function(e) {
-        e.preventDefault();
-        var pemeriksa = $("#tim-pemeriksa select.pemeriksa")[0];
-        var html = '';
-        html += '<div class="row mt-3">';
-        html += '<div class="col">';
-        html += '<select name="pemeriksa[]" class="form-select form-select-sm pemeriksa">';
-        html += $(pemeriksa).html();
-        html += '</select>';
-        html += '</div>';
-        html += '<div class="col-auto">';
-        html += '<div class="btn-group">';
-        html += '<a href="#" class="btn btn-sm btn-success btn-add-row" title="Tambah"><i class="bi-plus"></i></a>';
-        html += '<a href="#" class="btn btn-sm btn-danger btn-delete-row" title="Hapus"><i class="bi-trash"></i></a>';
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
-        $("#tim-pemeriksa").append(html);
-        Spandiv.Select2("select.pemeriksa");
-    });
-
-    // Hapus Pemeriksa
-    $(document).on("click", "#tim-pemeriksa .btn-delete-row", function(e) {
-        e.preventDefault();
-        if($("#tim-pemeriksa .row").length > 1) {
-            var rows = $(this).parents(".row");
-            rows[0].remove();
+    // Atasan langsung / tim pemeriksa
+    $(document).on("change", "input[name=pemeriksa]", function() {
+        var value = $("input[name=pemeriksa]:checked").val();
+        if(value == 1) {
+            $("#atasan-langsung").removeClass("d-none");
+            $("#tim-pemeriksa").addClass("d-none");
+            $("select.tim-pemeriksa").val(null);
+            $("select.tim-pemeriksa").trigger("change");
+            $("select.tim-pemeriksa option[value=" + "{{ $surat_panggilan_1->atasan }}" + "]").prop("selected", true);
+            $("select.tim-pemeriksa").trigger("change");
         }
-        else $("#tim-pemeriksa select").val(null).trigger("change");
+        else if(value == 2) {
+            $("#atasan-langsung").addClass("d-none");
+            $("#tim-pemeriksa").removeClass("d-none");
+        }
+    });
+
+    // Surat perintah
+    $(document).on("change", "input[name=wewenang]", function() {
+        var value = $("input[name=wewenang]:checked").val();
+        value == 2 ? $("#surat-perintah").removeClass("d-none") : $("#surat-perintah").addClass("d-none");
     });
 
     // Tambah Pertanyaan dan Jawaban
     $(document).on("click", "#qna .btn-add-row", function(e) {
         e.preventDefault();
         var html = '';
-        html += '<div class="row mt-3">';
+        html += '<div class="row mb-3">';
         html += '<div class="col">';
         html += '<textarea name="pertanyaan[]" class="form-control form-control-sm" rows="3" placeholder="Pertanyaan"></textarea>';
         html += '</div>';

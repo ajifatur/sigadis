@@ -144,6 +144,7 @@ class SuratPanggilanController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     * @param  int  $surat_id
      * @return \Illuminate\Http\Response
      */
     public function edit($id, $surat_id)

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ajifatur\Helpers\DateTimeExt;
 use App\Models\Terduga;
+use App\Models\BAP;
 
 class TerdugaController extends Controller
 {
@@ -100,11 +101,15 @@ class TerdugaController extends Controller
         $surat_panggilan_1 = $terduga->surat_panggilan->where('panggilan','=',1)->first();
         $surat_panggilan_2 = $terduga->surat_panggilan->where('panggilan','=',2)->first();
 
+        // BAP
+        $bap = $terduga->bap->first();
+
         // View
         return view('admin/terduga/detail', [
             'terduga' => $terduga,
             'surat_panggilan_1' => $surat_panggilan_1,
-            'surat_panggilan_2' => $surat_panggilan_2
+            'surat_panggilan_2' => $surat_panggilan_2,
+            'bap' => $bap,
         ]);
     }
 

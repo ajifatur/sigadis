@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ajifatur\Helpers\DateTimeExt;
 use PDF;
+use App\Models\Terduga;
 use App\Models\BAP;
 use App\Models\TimPemeriksa;
+use App\Models\Pelanggaran;
 
 class BAPController extends Controller
 {
@@ -23,36 +25,39 @@ class BAPController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // SIMPEG
-        $simpeg = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/list_doskar_by_key/10/1");
-        $simpeg = json_decode($simpeg, true);
-
-        // Berita acara pemeriksaan
-        $berita = BAP::orderBy('created_at','desc')->get();
-        foreach($berita as $key=>$b) {
-            foreach($simpeg as $si) {
-                if($si['nip'] == $b->terlapor) $b->terlapor = $si;
-            }
-        }
-
-        // View
-        return view('admin/bap/index', [
-            'berita' => $berita
-        ]);
+        abort(404);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
+        // Terduga
+        $terduga = Terduga::findOrFail($id);
+
+        // Surat panggilan 1
+        $surat_panggilan_1 = $terduga->surat_panggilan->where('panggilan','=',1)->first();
+
+        // Atasan
+        $atasan = $surat_panggilan_1 ? json_decode($surat_panggilan_1->atasan_json) : [];
+
+        // Pelanggaran
+        $pelanggaran = Pelanggaran::all();
+
         // View
-        return view('admin/bap/create');
+        return view('admin/bap/create', [
+            'terduga' => $terduga,
+            'surat_panggilan_1' => $surat_panggilan_1,
+            'atasan' => $atasan,
+            'pelanggaran' => $pelanggaran
+        ]);
     }
 
     /**
@@ -66,13 +71,10 @@ class BAPController extends Controller
         // Validation
         $validator = Validator::make($request->all(), [
             'tanggal' => 'required',
-            'saya_pemeriksa' => 'required',
+            'pemeriksa' => 'required',
             'wewenang' => 'required',
-            'terlapor' => 'required',
-            'pasal' => 'required',
-            'ayat' => 'required',
-            'huruf' => 'required',
-            'angka' => 'required',
+            'surat_perintah' => $request->wewenang == 2 ? 'required' : '',
+            'pelanggaran' => 'required',
         ]);
         
         // Check errors
@@ -81,6 +83,14 @@ class BAPController extends Controller
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
         else {
+            // SIMPEG Terlapor
+            $simpeg_terlapor = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$request->terlapor);
+            $simpeg_terlapor = json_decode($simpeg_terlapor);
+            $simpeg_terlapor = $simpeg_terlapor->value;
+            $p = explode(' ', $simpeg_terlapor->pangkat);
+            array_pop($p);
+            $simpeg_terlapor->pangkat = implode(' ', $p);
+
             // QNA
             $qna = [
                 'pertanyaan' => $request->pertanyaan,
@@ -88,28 +98,52 @@ class BAPController extends Controller
             ];
 
             // Simpan berita acara pemeriksaan
-            $berita = new BAP;
-            $berita->hari = date('w', strtotime(DateTimeExt::change($request->tanggal)));
-            $berita->tanggal = DateTimeExt::change($request->tanggal);
-            $berita->pemeriksa = $request->saya_pemeriksa;
-            $berita->wewenang = $request->wewenang;
-            $berita->terlapor = $request->terlapor;
-            $berita->pasal = $request->pasal;
-            $berita->ayat = $request->ayat;
-            $berita->huruf = $request->huruf;
-            $berita->angka = $request->angka;
-            $berita->qna = json_encode($qna);
-            $berita->save();
+            $bap = BAP::find($request->id);
+            if(!$bap) $bap = new BAP;
+            $bap->terduga_id = $request->terduga_id;
+            $bap->pelanggaran_id = $request->pelanggaran;
+            $bap->terlapor = $request->terlapor;
+            $bap->terlapor_json = json_encode([
+                'nama' => fullname($simpeg_terlapor->nama, $simpeg_terlapor->gelar_dpn, $simpeg_terlapor->gelar_blk),
+                'nip' => $simpeg_terlapor->nip_bar,
+                'pangkat' => $simpeg_terlapor->pangkat,
+                'jabatan' => $simpeg_terlapor->jabatan,
+                'unit' => $simpeg_terlapor->nama_unit,
+            ]);
+            $bap->tanggal = DateTimeExt::change($request->tanggal);
+            $bap->pemeriksa = $request->pemeriksa;
+            $bap->wewenang = $request->wewenang;
+            $bap->surat_perintah = $request->wewenang == 2 ? $request->surat_perintah : '';
+            $bap->qna = json_encode($qna);
+            $bap->save();
 
-            foreach($request->pemeriksa as $p) {
-                $pemeriksa = new TimPemeriksa;
-                $pemeriksa->bap_id = $berita->id;
-                $pemeriksa->pemeriksa = $p;
-                $pemeriksa->save();
+            if($request->id == '') {
+                foreach($request->tim_pemeriksa as $p) {
+                    $pemeriksa = new TimPemeriksa;
+                    $pemeriksa->bap_id = $bap->id;
+                    $pemeriksa->pemeriksa = $p;
+                    $pemeriksa->save();
+                }
+            }
+            else {
+                foreach($bap->tim_pemeriksa as $p) {
+                    if(!in_array($p->pemeriksa, $request->tim_pemeriksa)) {
+                        $po = TimPemeriksa::find($p->id);
+                        $po->delete();
+                    }
+                }
+                foreach($request->tim_pemeriksa as $p) {
+                    if(!in_array($p, $bap->tim_pemeriksa()->pluck('pemeriksa')->toArray())) {
+                        $pn = new TimPemeriksa;
+                        $pn->bap_id = $bap->id;
+                        $pn->pemeriksa = $p;
+                        $pn->save();
+                    }
+                }
             }
 
             // Redirect
-            return redirect()->route('admin.bap.index')->with(['message' => 'Berhasil menambah data.']);
+            return redirect()->route('admin.terduga.detail', ['id' => $request->terduga_id])->with(['message' => 'Berhasil memperbarui data.']);
         }
     }
 
@@ -117,89 +151,38 @@ class BAPController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     * @param  int  $bap_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, $bap_id)
     {
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
+        // Terduga
+        $terduga = Terduga::findOrFail($id);
+
         // Berita acara pemeriksaan
-        $berita = BAP::findOrFail($id);
-        $berita->qna = json_decode($berita->qna, true);
+        $bap = BAP::findOrFail($bap_id);
+        $bap->qna = json_decode($bap->qna, true);
+
+        // Surat panggilan 1
+        $surat_panggilan_1 = $terduga->surat_panggilan->where('panggilan','=',1)->first();
+
+        // Atasan
+        $atasan = $surat_panggilan_1 ? json_decode($surat_panggilan_1->atasan_json) : [];
+
+        // Pelanggaran
+        $pelanggaran = Pelanggaran::all();
 
         // View
         return view('admin/bap/edit', [
-            'berita' => $berita
+            'terduga' => $terduga,
+            'bap' => $bap,
+            'surat_panggilan_1' => $surat_panggilan_1,
+            'atasan' => $atasan,
+            'pelanggaran' => $pelanggaran
         ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        // Validation
-        $validator = Validator::make($request->all(), [
-            'tanggal' => 'required',
-            'saya_pemeriksa' => 'required',
-            'wewenang' => 'required',
-            'terlapor' => 'required',
-            'pasal' => 'required',
-            'ayat' => 'required',
-            'huruf' => 'required',
-            'angka' => 'required',
-        ]);
-        
-        // Check errors
-        if($validator->fails()) {
-            // Back to form page with validation error messages
-            return redirect()->back()->withErrors($validator->errors())->withInput();
-        }
-        else {
-            // QNA
-            $qna = [
-                'pertanyaan' => $request->pertanyaan,
-                'jawaban' => $request->jawaban,
-            ];
-
-            // Mengupdate Berita acara pemeriksaan
-            $berita = BAP::find($request->id);
-            $berita->hari = date('w', strtotime(DateTimeExt::change($request->tanggal)));
-            $berita->tanggal = DateTimeExt::change($request->tanggal);
-            $berita->pemeriksa = $request->saya_pemeriksa;
-            $berita->wewenang = $request->wewenang;
-            $berita->terlapor = $request->terlapor;
-            $berita->pasal = $request->pasal;
-            $berita->ayat = $request->ayat;
-            $berita->huruf = $request->huruf;
-            $berita->angka = $request->angka;
-            $berita->qna = json_encode($qna);
-            $berita->save();
-
-            // Sync pemeriksa
-            $pemeriksa_old = $berita->tim_pemeriksa;
-            foreach($berita->tim_pemeriksa as $p) {
-                if(!in_array($p->pemeriksa, $request->pemeriksa)) {
-                    $po = TimPemeriksa::find($p->id);
-                    $po->delete();
-                }
-            }
-            foreach($request->pemeriksa as $p) {
-                if(!in_array($p, $berita->tim_pemeriksa()->pluck('pemeriksa')->toArray())) {
-                    $pn = new TimPemeriksa;
-                    $pn->bap_id = $berita->id;
-                    $pn->pemeriksa = $p;
-                    $pn->save();
-                }
-            }
-
-            // Redirect
-            return redirect()->route('admin.bap.index')->with(['message' => 'Berhasil mengupdate data.']);
-        }
     }
 
     /**
@@ -214,11 +197,11 @@ class BAPController extends Controller
         // has_access(method(__METHOD__), Auth::user()->role_id);
         
         // Menghapus Berita acara pemeriksaan
-        $berita = BAP::find($request->id);
-        $berita->delete();
+        $bap = BAP::find($request->id);
+        $bap->delete();
 
         // Redirect
-        return redirect()->route('admin.bap.index')->with(['message' => 'Berhasil menghapus data.']);
+        return redirect()->route('admin.terduga.detail', ['id' => $bap->terduga->id])->with(['message' => 'Berhasil menghapus data.']);
     }
 
     /**
@@ -233,29 +216,25 @@ class BAPController extends Controller
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
         // Berita acara pemeriksaan
-        $berita = BAP::findOrFail($id);
-
-        // Terlapor
-        $terlapor = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$berita->terlapor);
-        $terlapor = json_decode($terlapor);
-        $berita->terlapor = $terlapor->value;
+        $bap = BAP::findOrFail($id);
+        $bap->terlapor_json = json_decode($bap->terlapor_json);
 
         // Tim pemeriksa
-        foreach($berita->tim_pemeriksa as $p) {
+        foreach($bap->tim_pemeriksa as $p) {
             $tp = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$p->pemeriksa);
             $tp = json_decode($tp);
             $p->pemeriksa = $tp->value;
         }
 
-        $berita->hariIndo = DateTimeExt::day($berita->tanggal);;
-        $berita->bulanIndo = DateTimeExt::month(date('m', strtotime($berita->tanggal)));
-        $berita->tanggalIndo = DateTimeExt::full($berita->tanggal);
-        $berita->qna = json_decode($berita->qna, true);
+        $bap->hariIndo = DateTimeExt::day($bap->tanggal);
+        $bap->bulanIndo = DateTimeExt::month(date('m', strtotime($bap->tanggal)));
+        $bap->tanggalIndo = DateTimeExt::full($bap->tanggal);
+        $bap->qna = json_decode($bap->qna, true);
 
         // PDF
         $pdf = PDF::loadView('admin/bap/print', [
-            'berita' => $berita
+            'bap' => $bap
         ]);
-        return $pdf->stream('Berita Acara Pemeriksaan - '.$berita->terlapor->nip_bar.'.pdf');
+        return $pdf->stream('Berita Acara Pemeriksaan - '.$bap->terduga->terduga_nip.'.pdf');
     }
 }

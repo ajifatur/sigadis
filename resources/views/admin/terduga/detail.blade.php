@@ -33,7 +33,7 @@
                             <tr>
                                 <th width="30">No</th>
                                 <th>Tahapan</th>
-                                <th width="120">Status</th>
+                                <th width="150">Status</th>
                                 <th width="120">Tanggal</th>
                                 <th width="60">Opsi</th>
                             </tr>
@@ -67,7 +67,15 @@
                             <tr>
                                 <td align="right">2</td>
                                 <td>Surat Panggilan II</td>
-                                <td><em class="{{ $surat_panggilan_2 ? 'text-success' : 'text-danger' }}">{{ $surat_panggilan_2 ? 'Sudah dibuat' : 'Belum dibuat' }}</em></td>
+                                <td>
+                                    @if($surat_panggilan_2)
+                                        <em class="text-success">Sudah dibuat</em>
+                                    @elseif(!$surat_panggilan_2 && !$bap)
+                                        <em class="text-danger">Belum dibuat</em>
+                                    @elseif(!$surat_panggilan_2 && $bap)
+                                        <em class="text-danger">Tidak perlu dibuat</em>
+                                    @endif
+                                </td>
                                 <td>
                                     @if($surat_panggilan_2 != null)
                                         Surat:
@@ -83,7 +91,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        @if($surat_panggilan_1 && $surat_panggilan_2 == null)
+                                        @if($surat_panggilan_1 && $surat_panggilan_2 == null && $bap == null)
                                             <a href="{{ route('admin.surat-panggilan.create', ['id' => $terduga->id, 'panggilan' => 2]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
                                         @elseif($surat_panggilan_1 && $surat_panggilan_2)
                                             <a href="{{ route('admin.surat-panggilan.print', ['id' => $surat_panggilan_2->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
@@ -98,9 +106,21 @@
                             <tr>
                                 <td align="right">3</td>
                                 <td>Berita Acara Pemeriksaan</td>
-                                <td><em class="text-danger">Belum dibuat</em></td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td><em class="{{ $bap ? 'text-success' : 'text-danger' }}">{{ $bap ? 'Sudah dibuat' : 'Belum dibuat' }}</em></td>
+                                <td>{{ $bap ? date('d/m/Y', strtotime($bap->tanggal)) : '-' }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        @if($surat_panggilan_1 && $bap == null)
+                                            <a href="{{ route('admin.bap.create', ['id' => $terduga->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
+                                        @elseif($surat_panggilan_1 && $bap)
+                                            <a href="{{ route('admin.bap.print', ['id' => $bap->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
+                                            <a href="{{ route('admin.bap.edit', ['id' => $terduga->id, 'bap_id' => $bap->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger btn-delete-bap" data-id="{{ $bap->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td align="right">4</td>
@@ -143,6 +163,11 @@
     <input type="hidden" name="id">
 </form>
 
+<form class="form-delete-bap d-none" method="post" action="{{ route('admin.bap.delete') }}">
+    @csrf
+    <input type="hidden" name="id">
+</form>
+
 @endsection
 
 @section('js')
@@ -150,6 +175,7 @@
 <script type="text/javascript">
     // Button Delete
     Spandiv.ButtonDelete(".btn-delete-surat-panggilan", ".form-delete-surat-panggilan");
+    Spandiv.ButtonDelete(".btn-delete-bap", ".form-delete-bap");
 </script>
 
 @endsection

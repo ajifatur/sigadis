@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Terduga extends Model
+class Pelanggaran extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class Terduga extends Model
      *
      * @var string
      */
-    protected $table = 'tbl_terduga';
+    protected $table = 'tbl_pelanggaran';
 
     /**
      * The attributes that are mass assignable.
@@ -26,18 +26,18 @@ class Terduga extends Model
     ];
     
     /**
-     * Surat panggilan.
+     * Kewajiban / larangan.
      */
-    public function surat_panggilan()
+    public function kl()
     {
-        return $this->hasMany(SuratPanggilan::class);
+        return $this->belongsTo(KL::class, 'kl_id');
     }
     
     /**
-     * BAP.
+     * Jenis.
      */
-    public function bap()
+    public function jenis()
     {
-        return $this->hasMany(BAP::class);
+        return $this->belongsTo(Jenis::class, 'jenis_id');
     }
 }

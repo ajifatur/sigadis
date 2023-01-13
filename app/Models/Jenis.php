@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BAP extends Model
+class Jenis extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class BAP extends Model
      *
      * @var string
      */
-    protected $table = 'tbl_bap';
+    protected $table = 'tbl_jenis';
 
     /**
      * The attributes that are mass assignable.
@@ -26,26 +26,10 @@ class BAP extends Model
     ];
     
     /**
-     * Terduga.
-     */
-    public function terduga()
-    {
-        return $this->belongsTo(Terduga::class, 'terduga_id');
-    }
-    
-    /**
      * Pelanggaran.
      */
     public function pelanggaran()
     {
-        return $this->belongsTo(Pelanggaran::class, 'pelanggaran_id');
-    }
-
-    /**
-     * Tim pemeriksa.
-     */
-    public function tim_pemeriksa()
-    {
-        return $this->hasMany(TimPemeriksa::class, 'bap_id');
+        return $this->hasMany(Pelanggaran::class);
     }
 }

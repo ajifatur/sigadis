@@ -35,13 +35,16 @@ Route::group(['middleware' => ['faturhelper.admin']], function() {
     Route::get('/admin/surat-panggilan/print/{id}', 'SuratPanggilanController@print')->name('admin.surat-panggilan.print');
 
     // Berita Acara Pemeriksaan
-    Route::get('/admin/bap', 'BAPController@index')->name('admin.bap.index');
-    Route::get('/admin/bap/create', 'BAPController@create')->name('admin.bap.create');
+    Route::get('/admin/terduga/{id}/bap/create', 'BAPController@create')->name('admin.bap.create');
+    Route::get('/admin/terduga/{id}/bap/edit/{bap_id}', 'BAPController@edit')->name('admin.bap.edit');
     Route::post('/admin/bap/store', 'BAPController@store')->name('admin.bap.store');
-    Route::get('/admin/bap/detail/{id}', 'BAPController@detail')->name('admin.bap.detail');
-    Route::get('/admin/bap/edit/{id}', 'BAPController@edit')->name('admin.bap.edit');
-    Route::post('/admin/bap/update', 'BAPController@update')->name('admin.bap.update');
     Route::post('/admin/bap/delete', 'BAPController@delete')->name('admin.bap.delete');
+
+    // Route::get('/admin/bap', 'BAPController@index')->name('admin.bap.index');
+    // Route::get('/admin/bap/create', 'BAPController@create')->name('admin.bap.create');
+    // Route::get('/admin/bap/detail/{id}', 'BAPController@detail')->name('admin.bap.detail');
+    // Route::get('/admin/bap/edit/{id}', 'BAPController@edit')->name('admin.bap.edit');
+    // Route::post('/admin/bap/update', 'BAPController@update')->name('admin.bap.update');
     Route::get('/admin/bap/print/{id}', 'BAPController@print')->name('admin.bap.print');
 });
 
