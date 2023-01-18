@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ajifatur\Helpers\DateTimeExt;
 use App\Models\Terduga;
-use App\Models\BAP;
 
 class TerdugaController extends Controller
 {
@@ -24,6 +23,17 @@ class TerdugaController extends Controller
 
         // Terduga
         $terduga = Terduga::latest()->get();
+
+        foreach($terduga as $key=>$t) {
+            if($t->bap()->first())
+                $terduga[$key]->progress = 'BAP';
+            elseif($t->surat_panggilan->where('panggilan','=',2)->first())
+                $terduga[$key]->progress = 'Surat Panggilan II';
+            elseif($t->surat_panggilan->where('panggilan','=',1)->first())
+                $terduga[$key]->progress = 'Surat Panggilan I';
+            else
+                $terduga[$key]->progress = '-';
+        }
 
         // View
         return view('admin/terduga/index', [

@@ -73,7 +73,7 @@
                                     @elseif(!$surat_panggilan_2 && !$bap)
                                         <em class="text-danger">Belum dibuat</em>
                                     @elseif(!$surat_panggilan_2 && $bap)
-                                        <em class="text-danger">Tidak perlu dibuat</em>
+                                        -
                                     @endif
                                 </td>
                                 <td>

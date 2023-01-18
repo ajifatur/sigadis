@@ -27,7 +27,8 @@
                                 <th width="30"><input type="checkbox" class="form-check-input checkbox-all"></th>
                                 <th>Terduga</th>
                                 <th>Dugaan Pelanggaran</th>
-                                <th width="80">Tanggal</th>
+                                <th width="100">Progress</th>
+                                <th width="80">Tanggal Input</th>
                                 <th width="60">Opsi</th>
                             </tr>
                         </thead>
@@ -41,6 +42,7 @@
                                     <span class="small text-muted">{{ $t->terduga_nip }}</span>
                                 </td>
                                 <td class="align-top">{{ $t->dugaan_pelanggaran }}</td>
+                                <td class="align-top">{{ $t->progress }}</td>
                                 <td>
                                     <span class="d-none">{{ $t->created_at }}</span>
                                     {{ date('d/m/Y', strtotime($t->created_at)) }}
