@@ -64,4 +64,12 @@ class Kasus extends Model
     {
         return $this->hasMany(Kephukdis::class);
     }
+    
+    /**
+     * SPMK.
+     */
+    public function spmk()
+    {
+        return $this->hasMany(SPMK::class);
+    }
 }

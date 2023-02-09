@@ -182,9 +182,33 @@
                             <tr>
                                 <td align="right">7</td>
                                 <td>Surat Panggilan untuk Menerima Keputusan Hukuman Disiplin</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td><span class="{{ $lhp ? 'fst-italic text-success' : '' }}">{{ $spmk ? 'Sudah dibuat' : '-' }}</span></td>
+                                <td>
+                                    @if($spmk)
+                                        Surat:
+                                        <br>
+                                        {{ $spmk != null ? date('d/m/Y', strtotime($spmk->tanggal_surat)) : '-' }}
+                                        <hr class="my-1">
+                                        Pemanggilan:
+                                        <br>
+                                        {{ $spmk != null ? date('d/m/Y', strtotime($spmk->tanggal_menghadap)) : '-' }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        @if($kephukdis && $spmk == null)
+                                            <a href="{{ route('admin.spmk.create', ['id' => $kasus->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
+                                        @elseif($kephukdis && $spmk)
+                                            <a href="{{ route('admin.spmk.print', ['id' => $spmk->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
+                                            <a href="{{ route('admin.spmk.edit', ['id' => $kasus->id, 'spmk_id' => $spmk->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger btn-delete-spmk" data-id="{{ $spmk->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -219,6 +243,11 @@
     <input type="hidden" name="id">
 </form>
 
+<form class="form-delete-spmk d-none" method="post" action="{{ route('admin.spmk.delete') }}">
+    @csrf
+    <input type="hidden" name="id">
+</form>
+
 @endsection
 
 @section('js')
@@ -230,6 +259,7 @@
     Spandiv.ButtonDelete(".btn-delete-lhp", ".form-delete-lhp");
     Spandiv.ButtonDelete(".btn-delete-kpts", ".form-delete-kpts");
     Spandiv.ButtonDelete(".btn-delete-kephukdis", ".form-delete-kephukdis");
+    Spandiv.ButtonDelete(".btn-delete-spmk", ".form-delete-spmk");
 </script>
 
 @endsection

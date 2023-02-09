@@ -57,11 +57,19 @@ Route::group(['middleware' => ['faturhelper.admin']], function() {
     Route::get('/admin/kpts/print/{id}', 'KPTSController@print')->name('admin.kpts.print');
 
     // Keputusan Hukuman Disiplin
+    Route::get('/admin/kephukdis', 'KephukdisController@index')->name('admin.kephukdis.index');
     Route::get('/admin/kasus/{id}/kephukdis/create', 'KephukdisController@create')->name('admin.kephukdis.create');
     Route::get('/admin/kasus/{id}/kephukdis/edit/{kephukdis_id}', 'KephukdisController@edit')->name('admin.kephukdis.edit');
     Route::post('/admin/kephukdis/store', 'KephukdisController@store')->name('admin.kephukdis.store');
     Route::post('/admin/kephukdis/delete', 'KephukdisController@delete')->name('admin.kephukdis.delete');
     Route::get('/admin/kephukdis/print/{id}', 'KephukdisController@print')->name('admin.kephukdis.print');
+
+    // Surat Panggilan untuk Menerima Keputusan Hukuman Disiplin
+    Route::get('/admin/kasus/{id}/spmk/create', 'SPMKController@create')->name('admin.spmk.create');
+    Route::get('/admin/kasus/{id}/spmk/edit/{spmk_id}', 'SPMKController@edit')->name('admin.spmk.edit');
+    Route::post('/admin/spmk/store', 'SPMKController@store')->name('admin.spmk.store');
+    Route::post('/admin/spmk/delete', 'SPMKController@delete')->name('admin.spmk.delete');
+    Route::get('/admin/spmk/print/{id}', 'SPMKController@print')->name('admin.spmk.print');
 });
 
 \Ajifatur\Helpers\RouteExt::auth();

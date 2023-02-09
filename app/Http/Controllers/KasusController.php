@@ -25,12 +25,16 @@ class KasusController extends Controller
         $kasus = Kasus::latest()->get();
 
         foreach($kasus as $key=>$k) {
-            if($k->kpts()->first())
-                $kasus[$key]->progress = 'Kep. Pembebasan Tugas Sementara';
+            if($k->spmk()->first())
+                $kasus[$key]->progress = 'Surat Panggilan untuk Menerima Hukuman Disiplin';
+            elseif($k->kephukdis()->first())
+                $kasus[$key]->progress = 'Keputusan Hukuman Disiplin';
+            elseif($k->kpts()->first())
+                $kasus[$key]->progress = 'Keputusan Pembebasan Tugas Sementara';
             elseif($k->lhp()->first())
-                $kasus[$key]->progress = 'LHP';
+                $kasus[$key]->progress = 'Laporan Hasil Pemeriksaan';
             elseif($k->bap()->first())
-                $kasus[$key]->progress = 'BAP';
+                $kasus[$key]->progress = 'Berita Acara Pemeriksaan';
             elseif($k->surat_panggilan->where('panggilan','=',2)->first())
                 $kasus[$key]->progress = 'Surat Panggilan II';
             elseif($k->surat_panggilan->where('panggilan','=',1)->first())
@@ -127,6 +131,9 @@ class KasusController extends Controller
         // Kephukdis
         $kephukdis = $kasus->kephukdis->first();
 
+        // SPMK
+        $spmk = $kasus->spmk->first();
+
         // View
         return view('admin/kasus/detail', [
             'kasus' => $kasus,
@@ -136,6 +143,7 @@ class KasusController extends Controller
             'lhp' => $lhp,
             'kpts' => $kpts,
             'kephukdis' => $kephukdis,
+            'spmk' => $spmk,
         ]);
     }
 

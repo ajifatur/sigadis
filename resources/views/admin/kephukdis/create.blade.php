@@ -43,6 +43,15 @@
                     </div>
                     <hr>
                     <div class="row mb-3">
+                        <label class="col-lg-2 col-md-3 col-form-label">Nomor <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <input type="text" name="nomor" class="form-control form-control-sm {{ $errors->has('nomor') ? 'border-danger' : '' }}" value="{{ old('nomor') }}">
+                            @if($errors->has('nomor'))
+                            <div class="small text-danger">{{ $errors->first('nomor') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3">
                         <label class="col-lg-2 col-md-3 col-form-label">Hukuman Disiplin <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
                             <select name="hukdis" class="form-select form-select-sm">
@@ -56,24 +65,49 @@
                             @endif
                         </div>
                     </div>
-                    <div class="row mb-3 {{ in_array(old('hukdis'), [4,5,6,7,8]) ? '' : 'd-none' }}" id="tmt">
+                    <div class="row mb-3 d-none" id="tmt">
                         <label class="col-lg-2 col-md-3 col-form-label">TMT <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
                             <div class="input-group input-group-sm">
                                 <input type="text" name="tmt" class="form-control form-control-sm {{ $errors->has('tmt') ? 'border-danger' : '' }}" value="{{ old('tmt') }}" autocomplete="off">
                                 <span class="input-group-text"><i class="bi-calendar2"></i></span>
                             </div>
-                            <div class="small text-secondary">
-                                @if(old('hukdis') == 4 || old('hukdis') == 5 || old('hukdis') == 6)
-                                    TMT Pemotongan Tunjangan Kinerja
-                                @elseif(old('hukdis') == 7)
-                                    TMT Penurunan Jabatan
-                                @elseif(old('hukdis') == 8)
-                                    TMT Pembebasan dari Jabatan
-                                @endif
-                            </div>
+                            <div class="small text-secondary"></div>
                             @if($errors->has('tmt'))
                             <div class="small text-danger">{{ $errors->first('tmt') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3 d-none" id="tukin">
+                        <label class="col-lg-2 col-md-3 col-form-label">Tunjangan Kinerja <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="tukin" class="form-control form-control-sm {{ $errors->has('tukin') ? 'border-danger' : '' }}" value="{{ old('tukin') }}" autocomplete="off">
+                            </div>
+                            @if($errors->has('tukin'))
+                            <div class="small text-danger">{{ $errors->first('tukin') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3 d-none" id="tmt-pengembalian">
+                        <label class="col-lg-2 col-md-3 col-form-label">TMT Pengembalian Tunjangan Kinerja <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="tmt_pengembalian" class="form-control form-control-sm {{ $errors->has('tmt_pengembalian') ? 'border-danger' : '' }}" value="{{ old('tmt_pengembalian') }}" autocomplete="off">
+                                <span class="input-group-text"><i class="bi-calendar2"></i></span>
+                            </div>
+                            @if($errors->has('tmt_pengembalian'))
+                            <div class="small text-danger">{{ $errors->first('tmt_pengembalian') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3 d-none" id="jabatan-setelah">
+                        <label class="col-lg-2 col-md-3 col-form-label">Jabatan Setelah Diturunkan <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <input type="text" name="jabatan_setelah_diturunkan" class="form-control form-control-sm {{ $errors->has('jabatan_setelah_diturunkan') ? 'border-danger' : '' }}" value="{{ old('jabatan_setelah_diturunkan') }}">
+                            @if($errors->has('jabatan_setelah_diturunkan'))
+                            <div class="small text-danger">{{ $errors->first('jabatan_setelah_diturunkan') }}</div>
                             @endif
                         </div>
                     </div>
@@ -163,21 +197,66 @@
 <script>
     Spandiv.DatePicker("input[name=tanggal_ditetapkan]");
     Spandiv.DatePicker("input[name=tmt]");
+    Spandiv.DatePicker("input[name=tmt_pengembalian]");
 
-    // TMT
-    $(document).on("change", "select[name=hukdis]", function() {
-        var ids = [4,5,6,7,8];
-        var hukdis = parseInt($(this).val());
-        if(ids.indexOf(hukdis) != -1)
-            $("#tmt").removeClass("d-none");
-        else
-            $("#tmt").addClass("d-none");
+    // Tunjangan kinerja
+    $(document).on("keyup", "input[name=tukin]", function() {
+        $(this).val(Spandiv.NumberFormat($("input[name=tukin]").val()));
     });
+
+    // Execute hukdis form
+    $(window).on("load", function() {
+        hukdisForm();
+    });
+    $(document).on("change", "select[name=hukdis]", function() {
+        hukdisForm();
+    });
+
+function hukdisForm() {
+    var ids = [4,5,6,7,8];
+    var pemotonganTunjangan = [4,5,6];
+    var hukdis = parseInt($("select[name=hukdis]").val());
+
+    // Show fields
+    if(ids.indexOf(hukdis) != -1) {
+        $("#tmt").removeClass("d-none");
+        if(pemotonganTunjangan.indexOf(hukdis) != -1) {
+            $("#tmt").find(".small.text-secondary").text("TMT Pemotongan Tunjangan Kinerja");
+            $("#tukin").removeClass("d-none");
+            $("#tmt-pengembalian").removeClass("d-none");
+            $("#jabatan-setelah").addClass("d-none");
+            $("#jabatan-setelah").find("input").val(null);
+        }
+        else if(hukdis == 7) {
+            $("#tmt").find(".small.text-secondary").text("TMT Penurunan Jabatan");
+            $("#tukin").addClass("d-none");
+            $("#tukin").find("input").val(null);
+            $("#tmt-pengembalian").addClass("d-none");
+            $("#tmt-pengembalian").find("input").val(null);
+            $("#jabatan-setelah").removeClass("d-none");
+        }
+        else if(hukdis == 8) {
+            $("#tmt").find(".small.text-secondary").text("TMT Pembebasan dari Jabatan");
+            $("#tukin").addClass("d-none");
+            $("#tukin").find("input").val(null);
+            $("#tmt-pengembalian").addClass("d-none");
+            $("#tmt-pengembalian").find("input").val(null);
+            $("#jabatan-setelah").addClass("d-none");
+            $("#jabatan-setelah").find("input").val(null);
+        }
+    }
+    // Hide fields
+    else {
+        $("#tmt").addClass("d-none");
+        $("#tmt").find("input").val(null);
+        $("#tukin").addClass("d-none");
+        $("#tukin").find("input").val(null);
+        $("#tmt-pengembalian").addClass("d-none");
+        $("#tmt-pengembalian").find("input").val(null);
+        $("#jabatan-setelah").addClass("d-none");
+        $("#jabatan-setelah").find("input").val(null);
+    }
+}
 </script>
-
-@endsection
-
-@section('css')
-
 
 @endsection

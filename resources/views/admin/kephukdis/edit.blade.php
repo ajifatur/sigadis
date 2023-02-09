@@ -43,16 +43,11 @@
                     </div>
                     <hr>
                     <div class="row mb-3">
-                        <label class="col-lg-2 col-md-3 col-form-label">Keputusan <span class="text-danger">*</span></label>
+                        <label class="col-lg-2 col-md-3 col-form-label">Nomor <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
-                            <select name="keputusan" class="form-select form-select-sm">
-                                <option value="" disabled selected>--Pilih--</option>
-                                @foreach($keputusan as $k)
-                                <option value="{{ $k['id'] }}" {{ $kephukdis->keputusan == $k['id'] ? 'selected' : '' }}>{{ $k['nama'] }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('keputusan'))
-                            <div class="small text-danger">{{ $errors->first('keputusan') }}</div>
+                            <input type="text" name="nomor" class="form-control form-control-sm {{ $errors->has('nomor') ? 'border-danger' : '' }}" value="{{ $kephukdis->nomor }}">
+                            @if($errors->has('nomor'))
+                            <div class="small text-danger">{{ $errors->first('nomor') }}</div>
                             @endif
                         </div>
                     </div>
@@ -67,6 +62,67 @@
                             </select>
                             @if($errors->has('hukdis'))
                             <div class="small text-danger">{{ $errors->first('hukdis') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3 d-none" id="tmt">
+                        <label class="col-lg-2 col-md-3 col-form-label">TMT <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="tmt" class="form-control form-control-sm {{ $errors->has('tmt') ? 'border-danger' : '' }}" value="{{ $kephukdis->tmt != null ? date('d/m/Y', strtotime($kephukdis->tmt)) : '' }}" autocomplete="off">
+                                <span class="input-group-text"><i class="bi-calendar2"></i></span>
+                            </div>
+                            <div class="small text-secondary"></div>
+                            @if($errors->has('tmt'))
+                            <div class="small text-danger">{{ $errors->first('tmt') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3 d-none" id="tukin">
+                        <label class="col-lg-2 col-md-3 col-form-label">Tunjangan Kinerja <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="tukin" class="form-control form-control-sm {{ $errors->has('tukin') ? 'border-danger' : '' }}" value="{{ number_format($kephukdis->tukin,0,',',',') }}" autocomplete="off">
+                            </div>
+                            @if($errors->has('tukin'))
+                            <div class="small text-danger">{{ $errors->first('tukin') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3 d-none" id="tmt-pengembalian">
+                        <label class="col-lg-2 col-md-3 col-form-label">TMT Pengembalian Tunjangan Kinerja <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="tmt_pengembalian" class="form-control form-control-sm {{ $errors->has('tmt_pengembalian') ? 'border-danger' : '' }}" value="{{ $kephukdis->tmt_pengembalian != null ? date('d/m/Y', strtotime($kephukdis->tmt_pengembalian)) : '' }}" autocomplete="off">
+                                <span class="input-group-text"><i class="bi-calendar2"></i></span>
+                            </div>
+                            @if($errors->has('tmt_pengembalian'))
+                            <div class="small text-danger">{{ $errors->first('tmt_pengembalian') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3 d-none" id="jabatan-setelah">
+                        <label class="col-lg-2 col-md-3 col-form-label">Jabatan Setelah Diturunkan <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <input type="text" name="jabatan_setelah_diturunkan" class="form-control form-control-sm {{ $errors->has('jabatan_setelah_diturunkan') ? 'border-danger' : '' }}" value="{{ $kephukdis->jabatan_setelah_diturunkan }}">
+                            @if($errors->has('jabatan_setelah_diturunkan'))
+                            <div class="small text-danger">{{ $errors->first('jabatan_setelah_diturunkan') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <label class="col-lg-2 col-md-3 col-form-label">Keputusan <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <select name="keputusan" class="form-select form-select-sm">
+                                <option value="" disabled selected>--Pilih--</option>
+                                @foreach($keputusan as $k)
+                                <option value="{{ $k['id'] }}" {{ $kephukdis->keputusan == $k['id'] ? 'selected' : '' }}>{{ $k['nama'] }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('keputusan'))
+                            <div class="small text-danger">{{ $errors->first('keputusan') }}</div>
                             @endif
                         </div>
                     </div>
@@ -138,15 +194,69 @@
 
 @section('js')
 
-<!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
 <script>
     Spandiv.DatePicker("input[name=tanggal_ditetapkan]");
+    Spandiv.DatePicker("input[name=tmt]");
+    Spandiv.DatePicker("input[name=tmt_pengembalian]");
+
+    // Tunjangan kinerja
+    $(document).on("keyup", "input[name=tukin]", function() {
+        $(this).val(Spandiv.NumberFormat($("input[name=tukin]").val()));
+    });
+
+    // Execute hukdis form
+    $(window).on("load", function() {
+        hukdisForm();
+    });
+    $(document).on("change", "select[name=hukdis]", function() {
+        hukdisForm();
+    });
+
+    function hukdisForm() {
+        var ids = [4,5,6,7,8];
+        var pemotonganTunjangan = [4,5,6];
+        var hukdis = parseInt($("select[name=hukdis]").val());
+
+        // Show fields
+        if(ids.indexOf(hukdis) != -1) {
+            $("#tmt").removeClass("d-none");
+            if(pemotonganTunjangan.indexOf(hukdis) != -1) {
+                $("#tmt").find(".small.text-secondary").text("TMT Pemotongan Tunjangan Kinerja");
+                $("#tukin").removeClass("d-none");
+                $("#tmt-pengembalian").removeClass("d-none");
+                $("#jabatan-setelah").addClass("d-none");
+                $("#jabatan-setelah").find("input").val(null);
+            }
+            else if(hukdis == 7) {
+                $("#tmt").find(".small.text-secondary").text("TMT Penurunan Jabatan");
+                $("#tukin").addClass("d-none");
+                $("#tukin").find("input").val(null);
+                $("#tmt-pengembalian").addClass("d-none");
+                $("#tmt-pengembalian").find("input").val(null);
+                $("#jabatan-setelah").removeClass("d-none");
+            }
+            else if(hukdis == 8) {
+                $("#tmt").find(".small.text-secondary").text("TMT Pembebasan dari Jabatan");
+                $("#tukin").addClass("d-none");
+                $("#tukin").find("input").val(null);
+                $("#tmt-pengembalian").addClass("d-none");
+                $("#tmt-pengembalian").find("input").val(null);
+                $("#jabatan-setelah").addClass("d-none");
+                $("#jabatan-setelah").find("input").val(null);
+            }
+        }
+        // Hide fields
+        else {
+            $("#tmt").addClass("d-none");
+            $("#tmt").find("input").val(null);
+            $("#tukin").addClass("d-none");
+            $("#tukin").find("input").val(null);
+            $("#tmt-pengembalian").addClass("d-none");
+            $("#tmt-pengembalian").find("input").val(null);
+            $("#jabatan-setelah").addClass("d-none");
+            $("#jabatan-setelah").find("input").val(null);
+        }
+    }
 </script>
-
-@endsection
-
-@section('css')
-
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"> -->
 
 @endsection

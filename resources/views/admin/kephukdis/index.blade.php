@@ -1,14 +1,11 @@
 @extends('faturhelper::layouts/admin/main')
 
-@section('title', 'Kelola Kasus')
+@section('title', 'Kelola Keputusan Hukuman Disiplin')
 
 @section('content')
 
 <div class="d-sm-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-2 mb-sm-0">Kelola Kasus</h1>
-    <div class="btn-group">
-        <a href="{{ route('admin.kasus.create') }}" class="btn btn-sm btn-primary"><i class="bi-plus me-1"></i> Tambah Kasus</a>
-    </div>
+    <h1 class="h3 mb-2 mb-sm-0">Kelola Keputusan Hukuman Disiplin</h1>
 </div>
 <div class="row">
 	<div class="col-12">
@@ -25,35 +22,30 @@
                         <thead class="bg-light">
                             <tr>
                                 <th width="30"><input type="checkbox" class="form-check-input checkbox-all"></th>
-                                <th>Terduga</th>
-                                <th>Dugaan Pelanggaran</th>
-                                <th width="100">Progress</th>
-                                <th width="80">Tanggal Input</th>
-                                <th width="60">Opsi</th>
+                                <th>Terlapor</th>
+                                <th>Hukuman Disiplin</th>
+                                <th width="80">Tanggal Keputusan</th>
+                                <th width="40">Opsi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($kasus as $k)
+                            @foreach($kephukdis as $k)
+                            @php $terlapor = json_decode($k->terlapor_json); @endphp
                             <tr>
                                 <td align="center"><input type="checkbox" class="form-check-input checkbox-one"></td>
                                 <td>
-                                    {{ $k->terduga_nama }}
+                                    {{ $terlapor->nama }}
                                     <br>
-                                    <span class="small text-muted">{{ $k->terduga_nip }}</span>
+                                    <span class="small text-muted">{{ $terlapor->nip }}</span>
                                 </td>
-                                <td>{{ $k->dugaan_pelanggaran }}</td>
-                                <td>{{ $k->progress }}</td>
+                                <td>{{ $k->hukdis->nama }}</td>
                                 <td>
-                                    <span class="d-none">{{ $k->created_at }}</span>
-                                    {{ date('d/m/Y', strtotime($k->created_at)) }}
-                                    <br>
-                                    <span class="small text-muted">{{ date('H:i', strtotime($k->created_at)) }} WIB</span>
+                                    <span class="d-none">{{ $k->tanggal_ditetapkan }}</span>
+                                    {{ date('d/m/Y', strtotime($k->tanggal_ditetapkan)) }}
                                 </td>
                                 <td align="center">
                                     <div class="btn-group">
-                                        <a href="{{ route('admin.kasus.detail', ['id' => $k->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Lihat Progress"><i class="bi-eye"></i></a>
-                                        <a href="{{ route('admin.kasus.edit', ['id' => $k->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
-                                        <a href="#" class="btn btn-sm btn-danger btn-delete" data-id="{{ $k->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
+                                        <a href="{{ route('admin.kasus.detail', ['id' => $k->kasus_id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Lihat Detail"><i class="bi-eye"></i></a>
                                     </div>
                                 </td>
                             </tr>
