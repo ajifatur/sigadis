@@ -125,28 +125,64 @@
                             <tr>
                                 <td align="right">4</td>
                                 <td>Laporan Hasil Pemeriksaan</td>
-                                <td><em class="text-danger">Belum</em></td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td><span class="{{ $lhp ? 'fst-italic text-success' : '' }}">{{ $lhp ? 'Sudah dibuat' : '-' }}</span></td>
+                                <td>{{ $lhp ? date('d/m/Y', strtotime($lhp->tanggal_surat)) : '-' }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        @if($bap && $lhp == null)
+                                            <a href="{{ route('admin.lhp.create', ['id' => $kasus->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
+                                        @elseif($bap && $lhp)
+                                            <a href="{{ route('admin.lhp.print', ['id' => $lhp->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
+                                            <a href="{{ route('admin.lhp.edit', ['id' => $kasus->id, 'lhp_id' => $lhp->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger btn-delete-lhp" data-id="{{ $lhp->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td align="right">5</td>
                                 <td>Keputusan Pembebasan Sementara dari Tugas Jabatannya</td>
-                                <td><em class="text-danger">Belum</em></td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td><span class="{{ $kpts ? 'fst-italic text-success' : '' }}">{{ $kpts ? 'Sudah dibuat' : '-' }}</span></td>
+                                <td>{{ $kpts ? date('d/m/Y', strtotime($kpts->tanggal_ditetapkan)) : '-' }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        @if($bap && $kpts == null)
+                                            <a href="{{ route('admin.kpts.create', ['id' => $kasus->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
+                                        @elseif($bap && $kpts)
+                                            <a href="{{ route('admin.kpts.print', ['id' => $kpts->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
+                                            <a href="{{ route('admin.kpts.edit', ['id' => $kasus->id, 'kpts_id' => $kpts->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger btn-delete-kpts" data-id="{{ $kpts->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td align="right">6</td>
                                 <td>Keputusan Hukuman Disiplin</td>
-                                <td><em class="text-danger">Belum</em></td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td><span class="{{ $lhp ? 'fst-italic text-success' : '' }}">{{ $kephukdis ? 'Sudah dibuat' : '-' }}</span></td>
+                                <td>{{ $kephukdis ? date('d/m/Y', strtotime($kephukdis->tanggal_ditetapkan)) : '-' }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        @if($bap && $kephukdis == null)
+                                            <a href="{{ route('admin.kephukdis.create', ['id' => $kasus->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
+                                        @elseif($bap && $kephukdis)
+                                            <a href="{{ route('admin.kephukdis.print', ['id' => $kephukdis->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
+                                            <a href="{{ route('admin.kephukdis.edit', ['id' => $kasus->id, 'kephukdis_id' => $kephukdis->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger btn-delete-kephukdis" data-id="{{ $kephukdis->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td align="right">7</td>
                                 <td>Surat Panggilan untuk Menerima Keputusan Hukuman Disiplin</td>
-                                <td><em class="text-danger">Belum</em></td>
+                                <td>-</td>
                                 <td>-</td>
                                 <td>-</td>
                             </tr>
@@ -168,6 +204,21 @@
     <input type="hidden" name="id">
 </form>
 
+<form class="form-delete-lhp d-none" method="post" action="{{ route('admin.lhp.delete') }}">
+    @csrf
+    <input type="hidden" name="id">
+</form>
+
+<form class="form-delete-kpts d-none" method="post" action="{{ route('admin.kpts.delete') }}">
+    @csrf
+    <input type="hidden" name="id">
+</form>
+
+<form class="form-delete-kephukdis d-none" method="post" action="{{ route('admin.kephukdis.delete') }}">
+    @csrf
+    <input type="hidden" name="id">
+</form>
+
 @endsection
 
 @section('js')
@@ -176,6 +227,9 @@
     // Button Delete
     Spandiv.ButtonDelete(".btn-delete-surat-panggilan", ".form-delete-surat-panggilan");
     Spandiv.ButtonDelete(".btn-delete-bap", ".form-delete-bap");
+    Spandiv.ButtonDelete(".btn-delete-lhp", ".form-delete-lhp");
+    Spandiv.ButtonDelete(".btn-delete-kpts", ".form-delete-kpts");
+    Spandiv.ButtonDelete(".btn-delete-kephukdis", ".form-delete-kephukdis");
 </script>
 
 @endsection

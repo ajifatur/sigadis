@@ -25,7 +25,11 @@ class KasusController extends Controller
         $kasus = Kasus::latest()->get();
 
         foreach($kasus as $key=>$k) {
-            if($k->bap()->first())
+            if($k->kpts()->first())
+                $kasus[$key]->progress = 'Kep. Pembebasan Tugas Sementara';
+            elseif($k->lhp()->first())
+                $kasus[$key]->progress = 'LHP';
+            elseif($k->bap()->first())
                 $kasus[$key]->progress = 'BAP';
             elseif($k->surat_panggilan->where('panggilan','=',2)->first())
                 $kasus[$key]->progress = 'Surat Panggilan II';
@@ -114,12 +118,24 @@ class KasusController extends Controller
         // BAP
         $bap = $kasus->bap->first();
 
+        // LHP
+        $lhp = $kasus->lhp->first();
+
+        // KPTS
+        $kpts = $kasus->kpts->first();
+
+        // Kephukdis
+        $kephukdis = $kasus->kephukdis->first();
+
         // View
         return view('admin/kasus/detail', [
             'kasus' => $kasus,
             'surat_panggilan_1' => $surat_panggilan_1,
             'surat_panggilan_2' => $surat_panggilan_2,
             'bap' => $bap,
+            'lhp' => $lhp,
+            'kpts' => $kpts,
+            'kephukdis' => $kephukdis,
         ]);
     }
 

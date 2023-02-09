@@ -40,4 +40,28 @@ class Kasus extends Model
     {
         return $this->hasMany(BAP::class);
     }
+    
+    /**
+     * LHP.
+     */
+    public function lhp()
+    {
+        return $this->hasMany(LHP::class);
+    }
+    
+    /**
+     * KPTS.
+     */
+    public function kpts()
+    {
+        return $this->hasMany(KPTS::class);
+    }
+    
+    /**
+     * Kephukdis.
+     */
+    public function kephukdis()
+    {
+        return $this->hasMany(Kephukdis::class);
+    }
 }

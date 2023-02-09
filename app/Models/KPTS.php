@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Jenis extends Model
+class KPTS extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class Jenis extends Model
      *
      * @var string
      */
-    protected $table = 'tbl_jenis';
+    protected $table = 'tbl_kpts';
 
     /**
      * The attributes that are mass assignable.
@@ -26,18 +26,18 @@ class Jenis extends Model
     ];
     
     /**
+     * Kasus.
+     */
+    public function kasus()
+    {
+        return $this->belongsTo(Kasus::class, 'kasus_id');
+    }
+    
+    /**
      * Pelanggaran.
      */
     public function pelanggaran()
     {
-        return $this->hasMany(Pelanggaran::class);
-    }
-    
-    /**
-     * Hukdis.
-     */
-    public function hukdis()
-    {
-        return $this->hasMany(Hukdis::class);
+        return $this->belongsTo(Pelanggaran::class, 'pelanggaran_id');
     }
 }

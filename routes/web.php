@@ -19,7 +19,7 @@ Route::get('/', function () {
 });
 
 Route::group(['middleware' => ['faturhelper.admin']], function() {
-    // Terduga
+    // Kasus
     Route::get('/admin/kasus', 'KasusController@index')->name('admin.kasus.index');
     Route::get('/admin/kasus/create', 'KasusController@create')->name('admin.kasus.create');
     Route::post('/admin/kasus/store', 'KasusController@store')->name('admin.kasus.store');
@@ -40,13 +40,28 @@ Route::group(['middleware' => ['faturhelper.admin']], function() {
     Route::get('/admin/kasus/{id}/bap/edit/{bap_id}', 'BAPController@edit')->name('admin.bap.edit');
     Route::post('/admin/bap/store', 'BAPController@store')->name('admin.bap.store');
     Route::post('/admin/bap/delete', 'BAPController@delete')->name('admin.bap.delete');
-
-    // Route::get('/admin/bap', 'BAPController@index')->name('admin.bap.index');
-    // Route::get('/admin/bap/create', 'BAPController@create')->name('admin.bap.create');
-    // Route::get('/admin/bap/detail/{id}', 'BAPController@detail')->name('admin.bap.detail');
-    // Route::get('/admin/bap/edit/{id}', 'BAPController@edit')->name('admin.bap.edit');
-    // Route::post('/admin/bap/update', 'BAPController@update')->name('admin.bap.update');
     Route::get('/admin/bap/print/{id}', 'BAPController@print')->name('admin.bap.print');
+
+    // Laporan Hasil Pemeriksaan
+    Route::get('/admin/kasus/{id}/lhp/create', 'LHPController@create')->name('admin.lhp.create');
+    Route::get('/admin/kasus/{id}/lhp/edit/{lhp_id}', 'LHPController@edit')->name('admin.lhp.edit');
+    Route::post('/admin/lhp/store', 'LHPController@store')->name('admin.lhp.store');
+    Route::post('/admin/lhp/delete', 'LHPController@delete')->name('admin.lhp.delete');
+    Route::get('/admin/lhp/print/{id}', 'LHPController@print')->name('admin.lhp.print');
+
+    // Keputusan Pembebasan Tugas Sementara
+    Route::get('/admin/kasus/{id}/kpts/create', 'KPTSController@create')->name('admin.kpts.create');
+    Route::get('/admin/kasus/{id}/kpts/edit/{kpts_id}', 'KPTSController@edit')->name('admin.kpts.edit');
+    Route::post('/admin/kpts/store', 'KPTSController@store')->name('admin.kpts.store');
+    Route::post('/admin/kpts/delete', 'KPTSController@delete')->name('admin.kpts.delete');
+    Route::get('/admin/kpts/print/{id}', 'KPTSController@print')->name('admin.kpts.print');
+
+    // Keputusan Hukuman Disiplin
+    Route::get('/admin/kasus/{id}/kephukdis/create', 'KephukdisController@create')->name('admin.kephukdis.create');
+    Route::get('/admin/kasus/{id}/kephukdis/edit/{kephukdis_id}', 'KephukdisController@edit')->name('admin.kephukdis.edit');
+    Route::post('/admin/kephukdis/store', 'KephukdisController@store')->name('admin.kephukdis.store');
+    Route::post('/admin/kephukdis/delete', 'KephukdisController@delete')->name('admin.kephukdis.delete');
+    Route::get('/admin/kephukdis/print/{id}', 'KephukdisController@print')->name('admin.kephukdis.print');
 });
 
 \Ajifatur\Helpers\RouteExt::auth();
