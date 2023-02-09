@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ajifatur\Helpers\DateTimeExt;
 use PDF;
-use App\Models\Terduga;
+use App\Models\Kasus;
 use App\Models\SuratPanggilan;
 
 class SuratPanggilanController extends Controller
@@ -37,12 +37,12 @@ class SuratPanggilanController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Terduga
-        $terduga = Terduga::findOrFail($id);
+        // Kasus
+        $kasus = Kasus::findOrFail($id);
 
         // View
         return view('admin/surat-panggilan/create', [
-            'terduga' => $terduga
+            'kasus' => $kasus
         ]);
     }
 
@@ -100,7 +100,7 @@ class SuratPanggilanController extends Controller
             // Simpan surat panggilan
             $surat = SuratPanggilan::find($request->id);
             if(!$surat) $surat = new SuratPanggilan;
-            $surat->terduga_id = $request->terduga_id;
+            $surat->kasus_id = $request->kasus_id;
             $surat->panggilan = $request->panggilan;
             $surat->terlapor = $request->terlapor;
             $surat->terlapor_json = json_encode([
@@ -136,7 +136,7 @@ class SuratPanggilanController extends Controller
             $surat->save();
 
             // Redirect
-            return redirect()->route('admin.terduga.detail', ['id' => $request->terduga_id])->with(['message' => 'Berhasil memperbarui data.']);
+            return redirect()->route('admin.kasus.detail', ['id' => $request->kasus_id])->with(['message' => 'Berhasil memperbarui data.']);
         }
     }
 
@@ -152,15 +152,15 @@ class SuratPanggilanController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Terduga
-        $terduga = Terduga::findOrFail($id);
+        // Kasus
+        $kasus = Kasus::findOrFail($id);
 
         // Surat panggilan
         $surat = SuratPanggilan::findOrFail($surat_id);
 
         // View
         return view('admin/surat-panggilan/edit', [
-            'terduga' => $terduga,
+            'kasus' => $kasus,
             'surat' => $surat
         ]);
     }
@@ -181,7 +181,7 @@ class SuratPanggilanController extends Controller
         $surat->delete();
 
         // Redirect
-        return redirect()->route('admin.terduga.detail', ['id' => $surat->terduga->id])->with(['message' => 'Berhasil menghapus data.']);
+        return redirect()->route('admin.kasus.detail', ['id' => $surat->kasus->id])->with(['message' => 'Berhasil menghapus data.']);
     }
 
     /**
@@ -217,6 +217,6 @@ class SuratPanggilanController extends Controller
         $pdf = PDF::loadView('admin/surat-panggilan/print', [
             'surat' => $surat
         ]);
-        return $pdf->stream('Surat Panggilan '.$surat->panggilan.' - '.$surat->terduga->terduga_nip.'.pdf');
+        return $pdf->stream('Surat Panggilan '.$surat->panggilan.' - '.$surat->kasus->terduga_nip.'.pdf');
     }
 }

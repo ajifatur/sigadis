@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Berita Acara Pemeriksaan - {{ $bap->terduga->terduga_nip }}</title>
+    <title>Berita Acara Pemeriksaan - {{ $bap->kasus->terduga_nip }}</title>
     <style>
         @page {margin: 0px;}
 		html {margin: 0px;}
@@ -71,7 +71,7 @@
             <td colspan="3">Berdasarkan wewenang yang ada pada {{ $bap->wewenang == 1 ? 'Saya' : 'Surat Perintah '.$bap->surat_perintah }} telah melakukan pemeriksaan terhadap:</td>
         </tr>
         <tr>
-            <td width="100">Nama</td>
+            <td width="{{ $bap->pemeriksa == 2 ? '110' : '100' }}">Nama</td>
             <td width="5">:</td>
             <td width="100%">{{ $bap->terlapor_json->nama }}</td>
         </tr>

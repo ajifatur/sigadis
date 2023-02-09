@@ -1,11 +1,11 @@
 @extends('faturhelper::layouts/admin/main')
 
-@section('title', 'Tambah Surat Panggilan '.(Request::query('panggilan') == 1 ? 'I' :'II').': '.$terduga->terduga_nama)
+@section('title', 'Tambah Surat Panggilan '.(Request::query('panggilan') == 1 ? 'I' :'II'))
 
 @section('content')
 
 <div class="d-sm-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-0">Tambah Surat Panggilan {{ Request::query('panggilan') == 1 ? 'I' :'II' }}: {{ $terduga->terduga_nama }}</h1>
+    <h1 class="h3 mb-0">Tambah Surat Panggilan {{ Request::query('panggilan') == 1 ? 'I' :'II' }}</h1>
 </div>
 <div class="row">
 	<div class="col-12">
@@ -14,13 +14,13 @@
                 <form method="post" action="{{ route('admin.surat-panggilan.store') }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" value="">
-                    <input type="hidden" name="terduga_id" value="{{ $terduga->id }}">
+                    <input type="hidden" name="kasus_id" value="{{ $kasus->id }}">
                     <input type="hidden" name="panggilan" value="{{ Request::query('panggilan') }}">
-                    <input type="hidden" name="terlapor" value="{{ $terduga->terduga }}">
+                    <input type="hidden" name="terlapor" value="{{ $kasus->terduga }}">
                     <div class="row mb-3">
                         <label class="col-lg-2 col-md-3 col-form-label">Terduga</label>
                         <div class="col-lg-10 col-md-9">
-                            <input type="text" class="form-control form-control-sm" value="{{ $terduga->terduga_nama }} ({{ $terduga->terduga_nip }})" disabled>
+                            <input type="text" class="form-control form-control-sm" value="{{ $kasus->terduga_nama }} ({{ $kasus->terduga_nip }})" disabled>
                         </div>
                     </div>
                     <hr>
@@ -137,7 +137,7 @@
                         <div class="col-lg-2 col-md-3"></div>
                         <div class="col-lg-10 col-md-9">
                             <button type="submit" class="btn btn-sm btn-primary"><i class="bi-save me-1"></i> Submit</button>
-                            <a href="{{ route('admin.terduga.detail', ['id' => $terduga->id]) }}" class="btn btn-sm btn-secondary"><i class="bi-arrow-left me-1"></i> Kembali</a>
+                            <a href="{{ route('admin.kasus.detail', ['id' => $kasus->id]) }}" class="btn btn-sm btn-secondary"><i class="bi-arrow-left me-1"></i> Kembali</a>
                         </div>
                     </div>
                 </form>

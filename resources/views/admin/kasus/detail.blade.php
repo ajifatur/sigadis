@@ -20,11 +20,11 @@
                 <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item d-sm-flex justify-content-between p-0">
                         <strong>Terduga:</strong>
-                        <div>{{ $terduga->terduga_nama }}</div>
+                        <div>{{ $kasus->terduga_nama }}</div>
                     </li>
                     <li class="list-group-item d-sm-flex justify-content-between p-0">
                         <strong>Dugaan Pelanggaran:</strong>
-                        <div>{{ $terduga->dugaan_pelanggaran }}</div>
+                        <div>{{ $kasus->dugaan_pelanggaran }}</div>
                     </li>
                 </ul>
                 <div class="table-responsive">
@@ -55,10 +55,10 @@
                                 <td>
                                     <div class="btn-group">
                                         @if($surat_panggilan_1 == null)
-                                            <a href="{{ route('admin.surat-panggilan.create', ['id' => $terduga->id, 'panggilan' => 1]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
+                                            <a href="{{ route('admin.surat-panggilan.create', ['id' => $kasus->id, 'panggilan' => 1]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
                                         @else
                                             <a href="{{ route('admin.surat-panggilan.print', ['id' => $surat_panggilan_1->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
-                                            <a href="{{ route('admin.surat-panggilan.edit', ['id' => $terduga->id, 'surat_id' => $surat_panggilan_1->id, 'panggilan' => 1]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                            <a href="{{ route('admin.surat-panggilan.edit', ['id' => $kasus->id, 'surat_id' => $surat_panggilan_1->id, 'panggilan' => 1]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
                                             <a href="#" class="btn btn-sm btn-danger btn-delete-surat-panggilan" data-id="{{ $surat_panggilan_1->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
                                         @endif
                                     </div>
@@ -92,10 +92,10 @@
                                 <td>
                                     <div class="btn-group">
                                         @if($surat_panggilan_1 && $surat_panggilan_2 == null && $bap == null)
-                                            <a href="{{ route('admin.surat-panggilan.create', ['id' => $terduga->id, 'panggilan' => 2]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
+                                            <a href="{{ route('admin.surat-panggilan.create', ['id' => $kasus->id, 'panggilan' => 2]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
                                         @elseif($surat_panggilan_1 && $surat_panggilan_2)
                                             <a href="{{ route('admin.surat-panggilan.print', ['id' => $surat_panggilan_2->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
-                                            <a href="{{ route('admin.surat-panggilan.edit', ['id' => $terduga->id, 'surat_id' => $surat_panggilan_2->id, 'panggilan' => 2]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                            <a href="{{ route('admin.surat-panggilan.edit', ['id' => $kasus->id, 'surat_id' => $surat_panggilan_2->id, 'panggilan' => 2]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
                                             <a href="#" class="btn btn-sm btn-danger btn-delete-surat-panggilan" data-id="{{ $surat_panggilan_2->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
                                         @else
                                             -
@@ -111,10 +111,10 @@
                                 <td>
                                     <div class="btn-group">
                                         @if($surat_panggilan_1 && $bap == null)
-                                            <a href="{{ route('admin.bap.create', ['id' => $terduga->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
+                                            <a href="{{ route('admin.bap.create', ['id' => $kasus->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Tambah"><i class="bi-plus"></i></a>
                                         @elseif($surat_panggilan_1 && $bap)
                                             <a href="{{ route('admin.bap.print', ['id' => $bap->id]) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Cetak" target="_blank"><i class="bi-printer"></i></a>
-                                            <a href="{{ route('admin.bap.edit', ['id' => $terduga->id, 'bap_id' => $bap->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
+                                            <a href="{{ route('admin.bap.edit', ['id' => $kasus->id, 'bap_id' => $bap->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="bi-pencil"></i></a>
                                             <a href="#" class="btn btn-sm btn-danger btn-delete-bap" data-id="{{ $bap->id }}" data-bs-toggle="tooltip" title="Hapus"><i class="bi-trash"></i></a>
                                         @else
                                             -

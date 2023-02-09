@@ -11,9 +11,9 @@
 	<div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form method="post" action="{{ route('admin.terduga.update') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('admin.kasus.update') }}" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="id" value="{{ $terduga->id }}">
+                    <input type="hidden" name="id" value="{{ $kasus->id }}">
                     <div class="row mb-3">
                         <label class="col-lg-2 col-md-3 col-form-label">Terduga <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
@@ -28,7 +28,7 @@
                     <div class="row mb-3">
                         <label class="col-lg-2 col-md-3 col-form-label">Dugaan Pelanggaran <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
-                            <textarea name="dugaan_pelanggaran" class="form-control form-control-sm {{ $errors->has('dugaan_pelanggaran') ? 'border-danger' : '' }}" rows="3">{{ $terduga->dugaan_pelanggaran }}</textarea>
+                            <textarea name="dugaan_pelanggaran" class="form-control form-control-sm {{ $errors->has('dugaan_pelanggaran') ? 'border-danger' : '' }}" rows="3">{{ $kasus->dugaan_pelanggaran }}</textarea>
                             @if($errors->has('dugaan_pelanggaran'))
                             <div class="small text-danger">{{ $errors->first('dugaan_pelanggaran') }}</div>
                             @endif
@@ -39,7 +39,7 @@
                         <div class="col-lg-2 col-md-3"></div>
                         <div class="col-lg-10 col-md-9">
                             <button type="submit" class="btn btn-sm btn-primary"><i class="bi-save me-1"></i> Submit</button>
-                            <a href="{{ route('admin.terduga.index') }}" class="btn btn-sm btn-secondary"><i class="bi-arrow-left me-1"></i> Kembali</a>
+                            <a href="{{ route('admin.kasus.index') }}" class="btn btn-sm btn-secondary"><i class="bi-arrow-left me-1"></i> Kembali</a>
                         </div>
                     </div>
                 </form>
@@ -67,7 +67,7 @@
                     html += '<option value="' + response[i].nip + '" ' + selected + '>' + response[i].gelar_depan + response[i].nama + (response[i].gelar_belakang != '' ? ', ' + response[i].gelar_belakang : response[i].gelar_belakang) + ' (' + response[i].nip + ')' + '</option>';
                 }
                 $("select[name=terduga]").html(html).removeAttr("disabled");
-                $("select[name=terduga]").val("{{ $terduga->terduga }}");
+                $("select[name=terduga]").val("{{ $kasus->terduga }}");
             }
         });
     });

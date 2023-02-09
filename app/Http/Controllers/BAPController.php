@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ajifatur\Helpers\DateTimeExt;
 use PDF;
-use App\Models\Terduga;
+use App\Models\Kasus;
 use App\Models\BAP;
 use App\Models\TimPemeriksa;
 use App\Models\Pelanggaran;
@@ -39,11 +39,11 @@ class BAPController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Terduga
-        $terduga = Terduga::findOrFail($id);
+        // Kasus
+        $kasus = Kasus::findOrFail($id);
 
         // Surat panggilan 1
-        $surat_panggilan_1 = $terduga->surat_panggilan->where('panggilan','=',1)->first();
+        $surat_panggilan_1 = $kasus->surat_panggilan->where('panggilan','=',1)->first();
 
         // Atasan
         $atasan = $surat_panggilan_1 ? json_decode($surat_panggilan_1->atasan_json) : [];
@@ -53,7 +53,7 @@ class BAPController extends Controller
 
         // View
         return view('admin/bap/create', [
-            'terduga' => $terduga,
+            'kasus' => $kasus,
             'surat_panggilan_1' => $surat_panggilan_1,
             'atasan' => $atasan,
             'pelanggaran' => $pelanggaran
@@ -100,7 +100,7 @@ class BAPController extends Controller
             // Simpan berita acara pemeriksaan
             $bap = BAP::find($request->id);
             if(!$bap) $bap = new BAP;
-            $bap->terduga_id = $request->terduga_id;
+            $bap->kasus_id = $request->kasus_id;
             $bap->pelanggaran_id = $request->pelanggaran;
             $bap->terlapor = $request->terlapor;
             $bap->terlapor_json = json_encode([
@@ -143,7 +143,7 @@ class BAPController extends Controller
             }
 
             // Redirect
-            return redirect()->route('admin.terduga.detail', ['id' => $request->terduga_id])->with(['message' => 'Berhasil memperbarui data.']);
+            return redirect()->route('admin.kasus.detail', ['id' => $request->kasus_id])->with(['message' => 'Berhasil memperbarui data.']);
         }
     }
 
@@ -159,15 +159,15 @@ class BAPController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Terduga
-        $terduga = Terduga::findOrFail($id);
+        // Kasus
+        $kasus = Kasus::findOrFail($id);
 
         // Berita acara pemeriksaan
         $bap = BAP::findOrFail($bap_id);
         $bap->qna = json_decode($bap->qna, true);
 
         // Surat panggilan 1
-        $surat_panggilan_1 = $terduga->surat_panggilan->where('panggilan','=',1)->first();
+        $surat_panggilan_1 = $kasus->surat_panggilan->where('panggilan','=',1)->first();
 
         // Atasan
         $atasan = $surat_panggilan_1 ? json_decode($surat_panggilan_1->atasan_json) : [];
@@ -177,7 +177,7 @@ class BAPController extends Controller
 
         // View
         return view('admin/bap/edit', [
-            'terduga' => $terduga,
+            'kasus' => $kasus,
             'bap' => $bap,
             'surat_panggilan_1' => $surat_panggilan_1,
             'atasan' => $atasan,
@@ -201,7 +201,7 @@ class BAPController extends Controller
         $bap->delete();
 
         // Redirect
-        return redirect()->route('admin.terduga.detail', ['id' => $bap->terduga->id])->with(['message' => 'Berhasil menghapus data.']);
+        return redirect()->route('admin.kasus.detail', ['id' => $bap->kasus->id])->with(['message' => 'Berhasil menghapus data.']);
     }
 
     /**
@@ -235,6 +235,6 @@ class BAPController extends Controller
         $pdf = PDF::loadView('admin/bap/print', [
             'bap' => $bap
         ]);
-        return $pdf->stream('Berita Acara Pemeriksaan - '.$bap->terduga->terduga_nip.'.pdf');
+        return $pdf->stream('Berita Acara Pemeriksaan - '.$bap->kasus->terduga_nip.'.pdf');
     }
 }

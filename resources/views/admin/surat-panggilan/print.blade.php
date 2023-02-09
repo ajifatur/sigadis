@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Surat Panggilan {{ $surat->panggilan }} - {{ $surat->terduga->terduga_nip }}</title>
+    <title>Surat Panggilan {{ $surat->panggilan }} - {{ $surat->kasus->terduga_nip }}</title>
     <style>
         @page {margin: 0px;}
 		html {margin: 0px;}

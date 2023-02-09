@@ -26,10 +26,10 @@ class SuratPanggilan extends Model
     ];
     
     /**
-     * Terduga.
+     * Kasus.
      */
-    public function terduga()
+    public function kasus()
     {
-        return $this->belongsTo(Terduga::class, 'terduga_id');
+        return $this->belongsTo(Kasus::class, 'kasus_id');
     }
 }

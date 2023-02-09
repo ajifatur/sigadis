@@ -6,9 +6,9 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ajifatur\Helpers\DateTimeExt;
-use App\Models\Terduga;
+use App\Models\Kasus;
 
-class TerdugaController extends Controller
+class KasusController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,23 +21,23 @@ class TerdugaController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Terduga
-        $terduga = Terduga::latest()->get();
+        // Kasus
+        $kasus = Kasus::latest()->get();
 
-        foreach($terduga as $key=>$t) {
-            if($t->bap()->first())
-                $terduga[$key]->progress = 'BAP';
-            elseif($t->surat_panggilan->where('panggilan','=',2)->first())
-                $terduga[$key]->progress = 'Surat Panggilan II';
-            elseif($t->surat_panggilan->where('panggilan','=',1)->first())
-                $terduga[$key]->progress = 'Surat Panggilan I';
+        foreach($kasus as $key=>$k) {
+            if($k->bap()->first())
+                $kasus[$key]->progress = 'BAP';
+            elseif($k->surat_panggilan->where('panggilan','=',2)->first())
+                $kasus[$key]->progress = 'Surat Panggilan II';
+            elseif($k->surat_panggilan->where('panggilan','=',1)->first())
+                $kasus[$key]->progress = 'Surat Panggilan I';
             else
-                $terduga[$key]->progress = '-';
+                $kasus[$key]->progress = '-';
         }
 
         // View
-        return view('admin/terduga/index', [
-            'terduga' => $terduga
+        return view('admin/kasus/index', [
+            'kasus' => $kasus
         ]);
     }
 
@@ -52,7 +52,7 @@ class TerdugaController extends Controller
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
         // View
-        return view('admin/terduga/create');
+        return view('admin/kasus/create');
     }
 
     /**
@@ -80,16 +80,16 @@ class TerdugaController extends Controller
             $simpeg = json_decode($simpeg);
             $simpeg = $simpeg->value;
 
-            // Simpan terduga
-            $terduga = new Terduga;
-            $terduga->terduga = $request->terduga;
-            $terduga->terduga_nip = $simpeg->nip_bar;
-            $terduga->terduga_nama = fullname($simpeg->nama, $simpeg->gelar_dpn, $simpeg->gelar_blk);
-            $terduga->dugaan_pelanggaran = $request->dugaan_pelanggaran;
-            $terduga->save();
+            // Simpan kasus
+            $kasus = new Kasus;
+            $kasus->terduga = $request->terduga;
+            $kasus->terduga_nip = $simpeg->nip_bar;
+            $kasus->terduga_nama = fullname($simpeg->nama, $simpeg->gelar_dpn, $simpeg->gelar_blk);
+            $kasus->dugaan_pelanggaran = $request->dugaan_pelanggaran;
+            $kasus->save();
 
             // Redirect
-            return redirect()->route('admin.terduga.index')->with(['message' => 'Berhasil menambah data.']);
+            return redirect()->route('admin.kasus.index')->with(['message' => 'Berhasil menambah data.']);
         }
     }
 
@@ -104,19 +104,19 @@ class TerdugaController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Terduga
-        $terduga = Terduga::findOrFail($id);
+        // Kasus
+        $kasus = Kasus::findOrFail($id);
         
         // Surat panggilan
-        $surat_panggilan_1 = $terduga->surat_panggilan->where('panggilan','=',1)->first();
-        $surat_panggilan_2 = $terduga->surat_panggilan->where('panggilan','=',2)->first();
+        $surat_panggilan_1 = $kasus->surat_panggilan->where('panggilan','=',1)->first();
+        $surat_panggilan_2 = $kasus->surat_panggilan->where('panggilan','=',2)->first();
 
         // BAP
-        $bap = $terduga->bap->first();
+        $bap = $kasus->bap->first();
 
         // View
-        return view('admin/terduga/detail', [
-            'terduga' => $terduga,
+        return view('admin/kasus/detail', [
+            'kasus' => $kasus,
             'surat_panggilan_1' => $surat_panggilan_1,
             'surat_panggilan_2' => $surat_panggilan_2,
             'bap' => $bap,
@@ -134,12 +134,12 @@ class TerdugaController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Terduga
-        $terduga = Terduga::findOrFail($id);
+        // Kasus
+        $kasus = Kasus::findOrFail($id);
 
         // View
-        return view('admin/terduga/edit', [
-            'terduga' => $terduga
+        return view('admin/kasus/edit', [
+            'kasus' => $kasus
         ]);
     }
 
@@ -169,15 +169,15 @@ class TerdugaController extends Controller
             $simpeg = $simpeg->value;
 
             // Mengupdate terduga
-            $terduga = Terduga::find($request->id);
-            $terduga->terduga = $request->terduga;
-            $terduga->terduga_nip = $simpeg->nip_bar;
-            $terduga->terduga_nama = fullname($simpeg->nama, $simpeg->gelar_dpn, $simpeg->gelar_blk);
-            $terduga->dugaan_pelanggaran = $request->dugaan_pelanggaran;
-            $terduga->save();
+            $kasus = Kasus::find($request->id);
+            $kasus->terduga = $request->terduga;
+            $kasus->terduga_nip = $simpeg->nip_bar;
+            $kasus->terduga_nama = fullname($simpeg->nama, $simpeg->gelar_dpn, $simpeg->gelar_blk);
+            $kasus->dugaan_pelanggaran = $request->dugaan_pelanggaran;
+            $kasus->save();
 
             // Redirect
-            return redirect()->route('admin.terduga.index')->with(['message' => 'Berhasil mengupdate data.']);
+            return redirect()->route('admin.kasus.index')->with(['message' => 'Berhasil mengupdate data.']);
         }
     }
 
@@ -193,10 +193,10 @@ class TerdugaController extends Controller
         // has_access(method(__METHOD__), Auth::user()->role_id);
         
         // Menghapus terduga
-        $terduga = Terduga::find($request->id);
-        $terduga->delete();
+        $kasus = Kasus::find($request->id);
+        $kasus->delete();
 
         // Redirect
-        return redirect()->route('admin.terduga.index')->with(['message' => 'Berhasil menghapus data.']);
+        return redirect()->route('admin.kasus.index')->with(['message' => 'Berhasil menghapus data.']);
     }
 }

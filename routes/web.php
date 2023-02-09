@@ -14,29 +14,30 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect('auth.login');
 });
 
 Route::group(['middleware' => ['faturhelper.admin']], function() {
     // Terduga
-    Route::get('/admin/terduga', 'TerdugaController@index')->name('admin.terduga.index');
-    Route::get('/admin/terduga/create', 'TerdugaController@create')->name('admin.terduga.create');
-    Route::post('/admin/terduga/store', 'TerdugaController@store')->name('admin.terduga.store');
-    Route::get('/admin/terduga/detail/{id}', 'TerdugaController@detail')->name('admin.terduga.detail');
-    Route::get('/admin/terduga/edit/{id}', 'TerdugaController@edit')->name('admin.terduga.edit');
-    Route::post('/admin/terduga/update', 'TerdugaController@update')->name('admin.terduga.update');
-    Route::post('/admin/terduga/delete', 'TerdugaController@delete')->name('admin.terduga.delete');
+    Route::get('/admin/kasus', 'KasusController@index')->name('admin.kasus.index');
+    Route::get('/admin/kasus/create', 'KasusController@create')->name('admin.kasus.create');
+    Route::post('/admin/kasus/store', 'KasusController@store')->name('admin.kasus.store');
+    Route::get('/admin/kasus/detail/{id}', 'KasusController@detail')->name('admin.kasus.detail');
+    Route::get('/admin/kasus/edit/{id}', 'KasusController@edit')->name('admin.kasus.edit');
+    Route::post('/admin/kasus/update', 'KasusController@update')->name('admin.kasus.update');
+    Route::post('/admin/kasus/delete', 'KasusController@delete')->name('admin.kasus.delete');
 
     // Surat Panggilan
-    Route::get('/admin/terduga/{id}/surat-panggilan/create', 'SuratPanggilanController@create')->name('admin.surat-panggilan.create');
-    Route::get('/admin/terduga/{id}/surat-panggilan/edit/{surat_id}', 'SuratPanggilanController@edit')->name('admin.surat-panggilan.edit');
+    Route::get('/admin/kasus/{id}/surat-panggilan/create', 'SuratPanggilanController@create')->name('admin.surat-panggilan.create');
+    Route::get('/admin/kasus/{id}/surat-panggilan/edit/{surat_id}', 'SuratPanggilanController@edit')->name('admin.surat-panggilan.edit');
     Route::post('/admin/surat-panggilan/store', 'SuratPanggilanController@store')->name('admin.surat-panggilan.store');
     Route::post('/admin/surat-panggilan/delete', 'SuratPanggilanController@delete')->name('admin.surat-panggilan.delete');
     Route::get('/admin/surat-panggilan/print/{id}', 'SuratPanggilanController@print')->name('admin.surat-panggilan.print');
 
     // Berita Acara Pemeriksaan
-    Route::get('/admin/terduga/{id}/bap/create', 'BAPController@create')->name('admin.bap.create');
-    Route::get('/admin/terduga/{id}/bap/edit/{bap_id}', 'BAPController@edit')->name('admin.bap.edit');
+    Route::get('/admin/kasus/{id}/bap/create', 'BAPController@create')->name('admin.bap.create');
+    Route::get('/admin/kasus/{id}/bap/edit/{bap_id}', 'BAPController@edit')->name('admin.bap.edit');
     Route::post('/admin/bap/store', 'BAPController@store')->name('admin.bap.store');
     Route::post('/admin/bap/delete', 'BAPController@delete')->name('admin.bap.delete');
 

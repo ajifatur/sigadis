@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Terduga extends Model
+class Kasus extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class Terduga extends Model
      *
      * @var string
      */
-    protected $table = 'tbl_terduga';
+    protected $table = 'tbl_kasus';
 
     /**
      * The attributes that are mass assignable.
