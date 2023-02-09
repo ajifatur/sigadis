@@ -120,7 +120,7 @@
         Tembusan Yth :
         <ol>
             <li>Rektor</li>
-            <li>Wakil Rektor I, II, III</li>
+            <li>Wakil Rektor Bid. Umum dan Keuangan</li>
         </ol>
     </div>
 </body>

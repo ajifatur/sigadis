@@ -216,26 +216,15 @@ class KPTSController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Berita acara pemeriksaan
-        $bap = BAP::findOrFail($id);
-        $bap->terlapor_json = json_decode($bap->terlapor_json);
-
-        // Tim pemeriksa
-        foreach($bap->tim_pemeriksa as $p) {
-            $tp = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$p->pemeriksa);
-            $tp = json_decode($tp);
-            $p->pemeriksa = $tp->value;
-        }
-
-        $bap->hariIndo = DateTimeExt::day($bap->tanggal);
-        $bap->bulanIndo = DateTimeExt::month(date('m', strtotime($bap->tanggal)));
-        $bap->tanggalIndo = DateTimeExt::full($bap->tanggal);
-        $bap->qna = json_decode($bap->qna, true);
+        // Keputusan pembebasan tugas sementara
+        $kpts = KPTS::findOrFail($id);
+        $kpts->terlapor_json = json_decode($kpts->terlapor_json);
+        $kpts->atasan_json = json_decode($kpts->atasan_json);
 
         // PDF
-        $pdf = PDF::loadView('admin/bap/print', [
-            'bap' => $bap
+        $pdf = PDF::loadView('admin/kpts/print', [
+            'kpts' => $kpts
         ]);
-        return $pdf->stream('Berita Acara Pemeriksaan - '.$bap->kasus->terduga_nip.'.pdf');
+        return $pdf->stream('Keputusan Pembebasan Tugas Sementara - '.$kpts->kasus->terduga_nip.'.pdf');
     }
 }

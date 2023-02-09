@@ -233,26 +233,16 @@ class LHPController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Berita acara pemeriksaan
-        $bap = BAP::findOrFail($id);
-        $bap->terlapor_json = json_decode($bap->terlapor_json);
-
-        // Tim pemeriksa
-        foreach($bap->tim_pemeriksa as $p) {
-            $tp = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$p->pemeriksa);
-            $tp = json_decode($tp);
-            $p->pemeriksa = $tp->value;
-        }
-
-        $bap->hariIndo = DateTimeExt::day($bap->tanggal);
-        $bap->bulanIndo = DateTimeExt::month(date('m', strtotime($bap->tanggal)));
-        $bap->tanggalIndo = DateTimeExt::full($bap->tanggal);
-        $bap->qna = json_decode($bap->qna, true);
+        // Laporan hasil pemeriksaan
+        $lhp = LHP::findOrFail($id);
+        $lhp->terlapor_json = json_decode($lhp->terlapor_json);
+        $lhp->penerima_surat_json = json_decode($lhp->penerima_surat_json);
+        $lhp->pelapor_json = json_decode($lhp->pelapor_json);
 
         // PDF
-        $pdf = PDF::loadView('admin/bap/print', [
-            'bap' => $bap
+        $pdf = PDF::loadView('admin/lhp/print', [
+            'lhp' => $lhp
         ]);
-        return $pdf->stream('Berita Acara Pemeriksaan - '.$bap->kasus->terduga_nip.'.pdf');
+        return $pdf->stream('Laporan Hasil Pemeriksaan - '.$lhp->kasus->terduga_nip.'.pdf');
     }
 }

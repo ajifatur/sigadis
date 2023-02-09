@@ -67,15 +67,7 @@
                             <tr>
                                 <td align="right">2</td>
                                 <td>Surat Panggilan II</td>
-                                <td>
-                                    @if($surat_panggilan_2)
-                                        <em class="text-success">Sudah dibuat</em>
-                                    @elseif(!$surat_panggilan_2 && !$bap)
-                                        <em class="text-danger">Belum dibuat</em>
-                                    @elseif(!$surat_panggilan_2 && $bap)
-                                        -
-                                    @endif
-                                </td>
+                                <td><span class="{{ $surat_panggilan_2 ? 'fst-italic text-success' : '' }}">{{ $surat_panggilan_2 ? 'Sudah dibuat' : '-' }}</span></td>
                                 <td>
                                     @if($surat_panggilan_2 != null)
                                         Surat:
@@ -106,7 +98,7 @@
                             <tr>
                                 <td align="right">3</td>
                                 <td>Berita Acara Pemeriksaan</td>
-                                <td><em class="{{ $bap ? 'text-success' : 'text-danger' }}">{{ $bap ? 'Sudah dibuat' : 'Belum dibuat' }}</em></td>
+                                <td><span class="{{ $bap ? 'fst-italic text-success' : '' }}">{{ $bap ? 'Sudah dibuat' : '-' }}</span></td>
                                 <td>{{ $bap ? date('d/m/Y', strtotime($bap->tanggal)) : '-' }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -143,7 +135,11 @@
                             </tr>
                             <tr>
                                 <td align="right">5</td>
-                                <td>Keputusan Pembebasan Sementara dari Tugas Jabatannya</td>
+                                <td>
+                                    Keputusan Pembebasan Sementara dari Tugas Jabatannya
+                                    <br>
+                                    <small class="text-danger">Untuk Hukuman Disiplin Berat</small>
+                                </td>
                                 <td><span class="{{ $kpts ? 'fst-italic text-success' : '' }}">{{ $kpts ? 'Sudah dibuat' : '-' }}</span></td>
                                 <td>{{ $kpts ? date('d/m/Y', strtotime($kpts->tanggal_ditetapkan)) : '-' }}</td>
                                 <td>

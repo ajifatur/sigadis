@@ -41,6 +41,18 @@
                             </select>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <label class="col-lg-2 col-md-3 col-form-label">Tanggal Pelanggaran <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="tanggal_pelanggaran" class="form-control form-control-sm {{ $errors->has('tanggal_pelanggaran') ? 'border-danger' : '' }}" value="{{ old('tanggal_pelanggaran') }}" autocomplete="off">
+                                <span class="input-group-text"><i class="bi-calendar2"></i></span>
+                            </div>
+                            @if($errors->has('tanggal_pelanggaran'))
+                            <div class="small text-danger">{{ $errors->first('tanggal_pelanggaran') }}</div>
+                            @endif
+                        </div>
+                    </div>
                     <hr>
                     <div class="row mb-3">
                         <label class="col-lg-2 col-md-3 col-form-label">Nomor <span class="text-danger">*</span></label>
@@ -195,6 +207,7 @@
 @section('js')
 
 <script>
+    Spandiv.DatePicker("input[name=tanggal_pelanggaran]");
     Spandiv.DatePicker("input[name=tanggal_ditetapkan]");
     Spandiv.DatePicker("input[name=tmt]");
     Spandiv.DatePicker("input[name=tmt_pengembalian]");

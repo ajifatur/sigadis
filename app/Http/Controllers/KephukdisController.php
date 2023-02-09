@@ -106,8 +106,10 @@ class KephukdisController extends Controller
     {
         // Validation
         $validator = Validator::make($request->all(), [
+            'tanggal_pelanggaran' => 'required',
             'nomor' => 'required',
             'keputusan' => 'required',
+            'hukdis' => 'required',
             'hukdis' => 'required',
             'tanggal_ditetapkan' => 'required',
             'tempat_ditetapkan' => 'required',
@@ -155,6 +157,7 @@ class KephukdisController extends Controller
             $kephukdis->jabatan_setelah_diturunkan = $request->jabatan_setelah_diturunkan;
             $kephukdis->keputusan = $request->keputusan;
             $kephukdis->dugaan_pelanggaran = $request->dugaan_pelanggaran;
+            $kephukdis->tanggal_pelanggaran = DateTimeExt::change($request->tanggal_pelanggaran);
             $kephukdis->tanggal_ditetapkan = DateTimeExt::change($request->tanggal_ditetapkan);
             $kephukdis->tempat_ditetapkan = $request->tempat_ditetapkan;
             $kephukdis->nama_pejabat = $request->nama_pejabat;
@@ -249,26 +252,26 @@ class KephukdisController extends Controller
         // Check the access
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
-        // Berita acara pemeriksaan
-        $bap = BAP::findOrFail($id);
-        $bap->terlapor_json = json_decode($bap->terlapor_json);
+        // Keputusan hukuman disiplin
+        $kephukdis = Kephukdis::findOrFail($id);
+        $kephukdis->terlapor_json = json_decode($kephukdis->terlapor_json);
 
-        // Tim pemeriksa
-        foreach($bap->tim_pemeriksa as $p) {
-            $tp = file_get_contents("https://simpeg.unnes.ac.id/index.php/gen_xml/json_nip_staff/".$p->pemeriksa);
-            $tp = json_decode($tp);
-            $p->pemeriksa = $tp->value;
-        }
-
-        $bap->hariIndo = DateTimeExt::day($bap->tanggal);
-        $bap->bulanIndo = DateTimeExt::month(date('m', strtotime($bap->tanggal)));
-        $bap->tanggalIndo = DateTimeExt::full($bap->tanggal);
-        $bap->qna = json_decode($bap->qna, true);
+        // File
+        if(in_array($kephukdis->hukdis_id, [1,2,3]))
+            $file = 'print-ringan';
+        elseif(in_array($kephukdis->hukdis_id, [4,5,6]))
+            $file = 'print-sedang';
+        elseif(in_array($kephukdis->hukdis_id, [7]))
+            $file = 'print-berat-1';
+        elseif(in_array($kephukdis->hukdis_id, [8]))
+            $file = 'print-berat-2';
+        elseif(in_array($kephukdis->hukdis_id, [9]))
+            $file = 'print-berat-3';
 
         // PDF
-        $pdf = PDF::loadView('admin/bap/print', [
-            'bap' => $bap
+        $pdf = PDF::loadView('admin/kephukdis/'.$file, [
+            'kephukdis' => $kephukdis
         ]);
-        return $pdf->stream('Berita Acara Pemeriksaan - '.$bap->kasus->terduga_nip.'.pdf');
+        return $pdf->stream('Keputusan Hukuman Disiplin - '.$kephukdis->kasus->terduga_nip.'.pdf');
     }
 }

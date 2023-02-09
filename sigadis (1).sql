@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2023 at 10:05 AM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.5
+-- Generation Time: Feb 09, 2023 at 07:49 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -85,10 +85,9 @@ CREATE TABLE `menu_items` (
 
 INSERT INTO `menu_items` (`id`, `menuheader_id`, `name`, `route`, `routeparams`, `icon`, `visible_conditions`, `active_conditions`, `parent`, `num_order`, `created_at`, `updated_at`) VALUES
 (1, 1, 'Dashboard', 'admin.dashboard', '', 'bi-speedometer2', '', 'Request::url() == route(\'admin.dashboard\')', 0, 1, '2022-07-03 19:34:41', '2022-07-03 19:34:41'),
-(4, 1, 'Keputusan Hukdis Ringan', NULL, '', 'bi-receipt', '', 'Request::url() == route(\'admin.dashboard\') && Request::query(\'hukdis\') == \'ringan\'', 0, 5, '2022-09-03 03:17:43', '2023-02-09 01:43:51'),
-(8, 1, 'Keputusan Hukdis Sedang', NULL, '', 'bi-receipt', '', 'Request::url() == route(\'admin.dashboard\') && Request::query(\'hukdis\') == \'sedang\'', 0, 6, '2022-09-03 03:17:43', '2023-02-09 01:44:46'),
-(9, 1, 'Keputusan Hukdis Berat', NULL, '', 'bi-receipt', '', 'Request::url() == route(\'admin.dashboard\') && Request::query(\'hukdis\') == \'berat\'', 0, 7, '2022-09-03 03:17:43', '2023-02-09 01:45:06'),
-(17, 1, 'Surat Panggilan untuk Menerima Keputusan Hukdis', NULL, '', 'bi-envelope-dash', '', 'Request::url() == route(\'admin.dashboard\') && Request::query(\'hukdis\') == \'spmkh\'', 0, 8, '2022-09-03 03:31:04', '2023-02-09 01:45:35'),
+(4, 1, 'Keputusan Hukdis Ringan', 'admin.kephukdis.index', '{\"hukdis\":\"ringan\"}', 'bi-receipt', '', 'is_int(strpos(Request::url(), route(\'admin.kephukdis.index\'))) && Request::query(\'hukdis\') == \'ringan\'', 0, 5, '2022-09-03 03:17:43', '2023-02-09 16:02:58'),
+(8, 1, 'Keputusan Hukdis Sedang', 'admin.kephukdis.index', '{\"hukdis\":\"sedang\"}', 'bi-receipt', '', 'is_int(strpos(Request::url(), route(\'admin.kephukdis.index\'))) && Request::query(\'hukdis\') == \'sedang\'', 0, 6, '2022-09-03 03:17:43', '2023-02-09 01:44:46'),
+(9, 1, 'Keputusan Hukdis Berat', 'admin.kephukdis.index', '{\"hukdis\":\"berat\"}', 'bi-receipt', '', 'is_int(strpos(Request::url(), route(\'admin.kephukdis.index\'))) && Request::query(\'hukdis\') == \'berat\'', 0, 7, '2022-09-03 03:17:43', '2023-02-09 01:45:06'),
 (18, 1, 'Kasus', 'admin.kasus.index', '', 'bi-hammer', '', 'is_int(strpos(Request::url(), route(\'admin.kasus.index\')))', 0, 2, NULL, '2023-01-06 02:34:31');
 
 -- --------------------------------------------------------
@@ -435,7 +434,8 @@ CREATE TABLE `tbl_bap` (
 
 INSERT INTO `tbl_bap` (`id`, `kasus_id`, `pelanggaran_id`, `terlapor`, `terlapor_json`, `tanggal`, `pemeriksa`, `wewenang`, `surat_perintah`, `qna`, `created_at`, `updated_at`) VALUES
 (7, 3, 69, '130935363', '{\"nama\":\"Dra. ENDANG RETNO WINARTI, M. Pd.\",\"nip\":\"195909191981032003\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Lektor Kepala\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '2023-01-14', 1, 2, '0001', '{\"pertanyaan\":[\"Mengapa?\",\"Kapan?\"],\"jawaban\":[\"Menyebarkan berita hoax\",\"Kemarin\"]}', '2023-01-13 20:11:36', '2023-01-13 21:53:47'),
-(9, 5, 49, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '2023-02-23', 2, 1, '', '{\"pertanyaan\":[\"Apa?\",\"Siapa?\"],\"jawaban\":[\"Apa\",\"Siapa\"]}', '2023-02-09 02:28:48', '2023-02-09 02:30:02');
+(9, 5, 49, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '2023-02-23', 2, 1, '', '{\"pertanyaan\":[\"Apa?\",\"Siapa?\"],\"jawaban\":[\"Apa\",\"Siapa\"]}', '2023-02-09 02:28:48', '2023-02-09 02:30:02'),
+(10, 6, 56, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '2023-02-23', 1, 1, '', '{\"pertanyaan\":[\"Siapa?\"],\"jawaban\":[\"Saya\"]}', '2023-02-09 16:13:23', '2023-02-09 16:13:23');
 
 -- --------------------------------------------------------
 
@@ -457,15 +457,15 @@ CREATE TABLE `tbl_hukdis` (
 --
 
 INSERT INTO `tbl_hukdis` (`id`, `jenis_id`, `nama`, `tmt`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Teguran lisan', 0, NULL, NULL),
-(2, 1, 'Teguran tertulis', 0, NULL, NULL),
-(3, 1, 'Pernyataan tidak puas secara tertulis', 0, NULL, NULL),
-(4, 2, 'Pemotongan tunjangan kinerja sebesar 25% selama 6 bulan', 1, NULL, NULL),
-(5, 2, 'Pemotongan tunjangan kinerja sebesar 25% selama 9 bulan', 1, NULL, NULL),
-(6, 2, 'Pemotongan tunjangan kinerja sebesar 25% selama 12 bulan', 1, NULL, NULL),
-(7, 3, 'Penurunan jabatan setingkat lebih rendah selama 12 bulan', 1, NULL, NULL),
-(8, 3, 'Pembebasan dari jabatannya menjadi jabatan pelaksana selama 12 bulan', 1, NULL, NULL),
-(9, 3, 'Pemberhentian dengan hormat tidak atas permintaan sendiri sebagai PNS', 0, NULL, NULL);
+(1, 1, 'Teguran Lisan', 0, NULL, NULL),
+(2, 1, 'Teguran Tertulis', 0, NULL, NULL),
+(3, 1, 'Pernyataan Tidak Puas Secara Tertulis', 0, NULL, NULL),
+(4, 2, 'Pemotongan Tunjangan Kinerja sebesar 25% (dua puluh lima persen) selama 6 (enam) bulan', 1, NULL, NULL),
+(5, 2, 'Pemotongan Tunjangan Kinerja sebesar 25% (dua puluh lima persen) selama 9 (sembilan) bulan', 1, NULL, NULL),
+(6, 2, 'Pemotongan Tunjangan Kinerja sebesar 25% (dua puluh lima persen) selama 12 (dua belas) bulan', 1, NULL, NULL),
+(7, 3, 'Penurunan Jabatan Setingkat Lebih Rendah Selama 12 (dua belas) bulan', 1, NULL, NULL),
+(8, 3, 'Pembebasan dari Jabatannya Menjadi Jabatan Pelaksana Selama 12 (dua belas) bulan', 1, NULL, NULL),
+(9, 3, 'Pemberhentian dengan Hormat Tidak Atas Permintaan Sendiri sebagai Pegawai Negeri Sipil', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -510,8 +510,8 @@ CREATE TABLE `tbl_kasus` (
 --
 
 INSERT INTO `tbl_kasus` (`id`, `terduga`, `terduga_nip`, `terduga_nama`, `dugaan_pelanggaran`, `created_at`, `updated_at`) VALUES
-(4, '199705262022031008', '199705262022031008', 'Fathurrahman Prasetyo Aji, S.Pd.', 'Kode etik sebagai ASN', '2022-11-30 14:13:01', '2022-11-30 14:13:01'),
-(5, '199705262022031008', '199705262022031008', 'Fathurrahman Prasetyo Aji, S.Pd.', 'Kode etik ASN', '2023-02-09 02:07:35', '2023-02-09 02:09:41');
+(5, '199705262022031008', '199705262022031008', 'Fathurrahman Prasetyo Aji, S.Pd.', 'Kode etik ASN', '2023-02-09 02:07:35', '2023-02-09 02:09:41'),
+(6, '199705262022031008', '199705262022031008', 'Fathurrahman Prasetyo Aji, S.Pd.', 'Menyebarkan hoax', '2023-02-09 16:08:03', '2023-02-09 16:08:03');
 
 -- --------------------------------------------------------
 
@@ -524,10 +524,16 @@ CREATE TABLE `tbl_kephukdis` (
   `kasus_id` int(11) NOT NULL,
   `pelanggaran_id` int(11) NOT NULL,
   `hukdis_id` int(11) NOT NULL,
+  `nomor` varchar(255) NOT NULL,
   `terlapor` varchar(255) NOT NULL,
   `terlapor_json` text NOT NULL,
+  `tmt` date DEFAULT NULL,
+  `tukin` int(11) DEFAULT NULL,
+  `tmt_pengembalian` date DEFAULT NULL,
+  `jabatan_setelah_diturunkan` varchar(255) DEFAULT NULL,
   `keputusan` int(11) NOT NULL,
   `dugaan_pelanggaran` varchar(255) NOT NULL,
+  `tanggal_pelanggaran` date DEFAULT NULL,
   `tanggal_ditetapkan` date NOT NULL,
   `tempat_ditetapkan` varchar(255) NOT NULL,
   `nama_pejabat` varchar(255) NOT NULL,
@@ -536,6 +542,14 @@ CREATE TABLE `tbl_kephukdis` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_kephukdis`
+--
+
+INSERT INTO `tbl_kephukdis` (`id`, `kasus_id`, `pelanggaran_id`, `hukdis_id`, `nomor`, `terlapor`, `terlapor_json`, `tmt`, `tukin`, `tmt_pengembalian`, `jabatan_setelah_diturunkan`, `keputusan`, `dugaan_pelanggaran`, `tanggal_pelanggaran`, `tanggal_ditetapkan`, `tempat_ditetapkan`, `nama_pejabat`, `nip_pejabat`, `jabatan_pejabat`, `created_at`, `updated_at`) VALUES
+(6, 6, 56, 7, '002/II/HK/2023', '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '2023-04-01', NULL, NULL, 'Staff', 2, 'Menyebarkan hoax', '2023-01-03', '2023-03-03', 'Semarang', 'Prof. Dr. S Martono, M.Si.', '196603081989011001', 'Rektor', '2023-02-09 16:18:20', '2023-02-09 18:46:42'),
+(7, 5, 49, 3, '001/II/HK/2023', '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', NULL, NULL, NULL, NULL, 1, 'Kode etik ASN', '2023-02-12', '2023-02-10', 'Jakarta', 'Dyah Ismayani', '000000000000000000', 'Kepala Biro SDM', '2023-02-09 18:48:07', '2023-02-09 18:48:53');
 
 -- --------------------------------------------------------
 
@@ -623,7 +637,8 @@ CREATE TABLE `tbl_kpts` (
 --
 
 INSERT INTO `tbl_kpts` (`id`, `kasus_id`, `pelanggaran_id`, `terlapor`, `terlapor_json`, `keputusan`, `tanggal_ditetapkan`, `tempat_ditetapkan`, `atasan`, `atasan_json`, `created_at`, `updated_at`) VALUES
-(3, 5, 49, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', 1, '2023-02-24', 'Jakarta', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09 07:22:35', '2023-02-09 07:25:49');
+(3, 5, 49, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', 1, '2023-02-24', 'Jakarta', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09 07:22:35', '2023-02-09 07:25:49'),
+(4, 6, 56, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', 2, '2023-02-24', 'Semarang', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09 16:16:57', '2023-02-09 16:16:57');
 
 -- --------------------------------------------------------
 
@@ -657,7 +672,8 @@ CREATE TABLE `tbl_lhp` (
 --
 
 INSERT INTO `tbl_lhp` (`id`, `kasus_id`, `pelanggaran_id`, `hukdis_id`, `terlapor`, `terlapor_json`, `tanggal_surat`, `tempat_surat`, `penerima_surat`, `penerima_surat_json`, `tempat_penerima_surat`, `tanggal_pemeriksaan`, `pelapor`, `pelapor_json`, `status_pelapor`, `laporan`, `created_at`, `updated_at`) VALUES
-(2, 5, 49, 3, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '2023-02-24', 'Semarang', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', 'Semarang', '2023-02-23', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', 2, '', '2023-02-09 06:25:29', '2023-02-09 06:25:29');
+(2, 5, 49, 3, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '2023-02-24', 'Semarang', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', 'Semarang', '2023-02-23', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', 2, '', '2023-02-09 06:25:29', '2023-02-09 06:25:29'),
+(3, 6, 56, 3, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '2023-02-24', 'Semarang', '131813655', '{\"nama\":\"Prof. Dr. S Martono, M.Si.\",\"nip\":\"196603081989011001\",\"pangkat\":\"IV\\/c - Pembina Utama Muda\",\"jabatan\":\"Profesor (Rektor)\",\"unit\":\"UNNES - FE-Manajemen\"}', 'Semarang', '2023-02-23', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', 1, '', '2023-02-09 16:16:22', '2023-02-09 16:16:22');
 
 -- --------------------------------------------------------
 
@@ -753,6 +769,41 @@ INSERT INTO `tbl_pelanggaran` (`id`, `kl_id`, `jenis_id`, `keterangan`, `created
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_spmk`
+--
+
+CREATE TABLE `tbl_spmk` (
+  `id` int(11) NOT NULL,
+  `kasus_id` int(11) NOT NULL,
+  `pelanggaran_id` int(11) NOT NULL,
+  `hukdis_id` int(11) NOT NULL,
+  `terlapor` varchar(255) NOT NULL,
+  `terlapor_json` text NOT NULL,
+  `tanggal_surat` date NOT NULL,
+  `tempat_surat` varchar(255) NOT NULL,
+  `tempat_penerima_surat` varchar(255) NOT NULL,
+  `menghadap_kepada` varchar(255) NOT NULL,
+  `menghadap_kepada_json` text NOT NULL,
+  `tanggal_menghadap` date NOT NULL,
+  `jam_menghadap` time NOT NULL,
+  `tempat_menghadap` varchar(255) NOT NULL,
+  `atasan` varchar(255) NOT NULL,
+  `atasan_json` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_spmk`
+--
+
+INSERT INTO `tbl_spmk` (`id`, `kasus_id`, `pelanggaran_id`, `hukdis_id`, `terlapor`, `terlapor_json`, `tanggal_surat`, `tempat_surat`, `tempat_penerima_surat`, `menghadap_kepada`, `menghadap_kepada_json`, `tanggal_menghadap`, `jam_menghadap`, `tempat_menghadap`, `atasan`, `atasan_json`, `created_at`, `updated_at`) VALUES
+(3, 5, 49, 8, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '2023-03-11', 'Semarang', 'Semarang', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-03-13', '10:00:00', 'Gedung H Rektorat', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09 15:36:22', '2023-02-09 15:40:49'),
+(4, 6, 56, 3, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '2023-03-06', 'Semarang', 'Semarang', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-03-07', '14:30:00', 'Gedung H Rektorat', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09 16:19:09', '2023-02-09 16:19:09');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_surat_panggilan`
 --
 
@@ -785,7 +836,8 @@ INSERT INTO `tbl_surat_panggilan` (`id`, `kasus_id`, `panggilan`, `terlapor`, `t
 (7, 4, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2022-12-01', '10:55:00', 'Ruang Kepala BUHK', 1, 'Kode etik ASN', 1, '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2022-11-28', '2022-11-30 16:34:18', '2022-11-30 16:57:49'),
 (9, 3, 1, '130935363', '{\"nama\":\"Dra. ENDANG RETNO WINARTI, M. Pd.\",\"nip\":\"195909191981032003\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Lektor Kepala\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '130815346', '{\"nama\":\"Prof. Dr. Kartono, M. Si.\",\"nip\":\"195602221980031002\",\"pangkat\":\"IV\\/d - Pembina Utama Madya\",\"jabatan\":\"Profesor (Ketua Program Studi S2)\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '2023-01-18', '12:00:00', 'Rektorat', 1, 'Orasek', 1, '130815346', '{\"nama\":\"Prof. Dr. Kartono, M. Si.\",\"nip\":\"195602221980031002\",\"pangkat\":\"IV\\/d - Pembina Utama Madya\",\"jabatan\":\"Profesor (Ketua Program Studi S2)\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '2023-01-14', '2023-01-13 18:19:41', '2023-01-13 18:19:41'),
 (10, 4, 2, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-01-21', '13:00:00', 'Ruang Kepala BUHK', 2, 'Kode etik ASN', 1, '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-01-14', '2023-01-13 20:21:03', '2023-01-13 20:21:03'),
-(12, 5, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-23', '09:00:00', 'Gedung H Rektorat', 1, 'Kode etik ASN', 1, '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09', '2023-02-09 02:18:49', '2023-02-09 02:18:49');
+(12, 5, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-23', '09:00:00', 'Gedung H Rektorat', 1, 'Kode etik ASN', 1, '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09', '2023-02-09 02:18:49', '2023-02-09 02:18:49'),
+(13, 6, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-02-24', '14:00:00', 'Ruang Kepala BUHK', 1, 'Hoax', 1, '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09', '2023-02-09 16:12:03', '2023-02-09 16:12:03');
 
 -- --------------------------------------------------------
 
@@ -813,7 +865,8 @@ INSERT INTO `tbl_tim_pemeriksa` (`id`, `bap_id`, `pemeriksa`, `created_at`, `upd
 (12, 8, '132308158', '2023-01-13 20:22:39', '2023-01-13 20:22:39'),
 (13, 8, '132318267', '2023-01-13 20:22:39', '2023-01-13 20:22:39'),
 (17, 9, '132308158', '2023-02-09 02:28:48', '2023-02-09 02:28:48'),
-(18, 9, '132318267', '2023-02-09 02:28:48', '2023-02-09 02:28:48');
+(18, 9, '132318267', '2023-02-09 02:28:48', '2023-02-09 02:28:48'),
+(19, 10, '132308158', '2023-02-09 16:13:23', '2023-02-09 16:13:23');
 
 -- --------------------------------------------------------
 
@@ -843,7 +896,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `name`, `username`, `email`, `email_verified_at`, `password`, `remember_token`, `access_token`, `avatar`, `status`, `last_visit`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Admin', 'admin@admin.com', 'admin@admin.com', NULL, '$2y$10$DdFLeYLynqwb9FG89JY3v.FgGke7LAiAOVjXEBEHdRFm/WXkylxdu', NULL, 'uHRwq9JVxwNXwSHY8mDhgMBvM8TwSZBnbZ8EvfXu', NULL, 1, '2023-02-09 00:57:47', '2022-07-03 19:34:41', '2023-02-09 00:57:47');
+(1, 1, 'Admin', 'admin@admin.com', 'admin@admin.com', NULL, '$2y$10$DdFLeYLynqwb9FG89JY3v.FgGke7LAiAOVjXEBEHdRFm/WXkylxdu', NULL, 'uHRwq9JVxwNXwSHY8mDhgMBvM8TwSZBnbZ8EvfXu', NULL, 1, '2023-02-09 13:56:51', '2022-07-03 19:34:41', '2023-02-09 13:56:51');
 
 -- --------------------------------------------------------
 
@@ -937,7 +990,8 @@ INSERT INTO `visitors` (`id`, `user_id`, `ip_address`, `device`, `browser`, `pla
 (20, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-01-13 18:07:59', '2023-01-13 18:07:59'),
 (21, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 00:29:11', '2023-02-09 00:29:11'),
 (22, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 00:49:43', '2023-02-09 00:49:43'),
-(23, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 00:57:54', '2023-02-09 00:57:54');
+(23, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 00:57:54', '2023-02-09 00:57:54'),
+(24, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 13:56:55', '2023-02-09 13:56:55');
 
 --
 -- Indexes for dumped tables
@@ -1073,6 +1127,12 @@ ALTER TABLE `tbl_pelanggaran`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_spmk`
+--
+ALTER TABLE `tbl_spmk`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_surat_panggilan`
 --
 ALTER TABLE `tbl_surat_panggilan`
@@ -1189,7 +1249,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `tbl_bap`
 --
 ALTER TABLE `tbl_bap`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tbl_hukdis`
@@ -1207,13 +1267,13 @@ ALTER TABLE `tbl_jenis`
 -- AUTO_INCREMENT for table `tbl_kasus`
 --
 ALTER TABLE `tbl_kasus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tbl_kephukdis`
 --
 ALTER TABLE `tbl_kephukdis`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_kl`
@@ -1225,13 +1285,13 @@ ALTER TABLE `tbl_kl`
 -- AUTO_INCREMENT for table `tbl_kpts`
 --
 ALTER TABLE `tbl_kpts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_lhp`
 --
 ALTER TABLE `tbl_lhp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_pelanggaran`
@@ -1240,16 +1300,22 @@ ALTER TABLE `tbl_pelanggaran`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
+-- AUTO_INCREMENT for table `tbl_spmk`
+--
+ALTER TABLE `tbl_spmk`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `tbl_surat_panggilan`
 --
 ALTER TABLE `tbl_surat_panggilan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_tim_pemeriksa`
 --
 ALTER TABLE `tbl_tim_pemeriksa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1279,7 +1345,7 @@ ALTER TABLE `user_avatars`
 -- AUTO_INCREMENT for table `visitors`
 --
 ALTER TABLE `visitors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
