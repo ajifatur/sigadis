@@ -74,3 +74,10 @@ Route::group(['middleware' => ['faturhelper.admin']], function() {
 
 \Ajifatur\Helpers\RouteExt::auth();
 \Ajifatur\Helpers\RouteExt::admin();
+
+Route::group(['middleware' => ['faturhelper.admin']], function() {
+    // Dashboard
+    Route::get('/admin', function() {
+        return view('admin/dashboard/index');
+    })->name('admin.dashboard');
+});
