@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // return view('welcome');
-    return redirect('auth.login');
+    return redirect()->route('auth.login');
 });
 
 Route::group(['middleware' => ['faturhelper.admin']], function() {
