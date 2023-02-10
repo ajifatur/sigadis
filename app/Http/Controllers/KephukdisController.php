@@ -12,6 +12,7 @@ use App\Models\Kasus;
 use App\Models\Kephukdis;
 use App\Models\Pelanggaran;
 use App\Models\Hukdis;
+use App\Models\SPMK;
 
 class KephukdisController extends Controller
 {
@@ -236,6 +237,10 @@ class KephukdisController extends Controller
         // Menghapus keputusan hukdis
         $kephukdis = Kephukdis::find($request->id);
         $kephukdis->delete();
+
+        // Menghapus surat panggilan menerima keputusan hukdis (jika ada)
+        $spmk = SPMK::where('kasus_id','=',$kephukdis->kasus->id)->first();
+        if($spmk) $spmk->delete();
 
         // Redirect
         return redirect()->route('admin.kasus.detail', ['id' => $kephukdis->kasus->id])->with(['message' => 'Berhasil menghapus data.']);
