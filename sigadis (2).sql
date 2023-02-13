@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2023 at 07:49 PM
+-- Generation Time: Feb 13, 2023 at 05:20 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -813,6 +813,7 @@ CREATE TABLE `tbl_surat_panggilan` (
   `panggilan` int(11) NOT NULL,
   `terlapor` varchar(255) NOT NULL,
   `terlapor_json` text NOT NULL,
+  `nomor` varchar(255) NOT NULL,
   `menghadap_kepada` varchar(255) NOT NULL,
   `menghadap_kepada_json` text NOT NULL,
   `tanggal` date NOT NULL,
@@ -832,12 +833,12 @@ CREATE TABLE `tbl_surat_panggilan` (
 -- Dumping data for table `tbl_surat_panggilan`
 --
 
-INSERT INTO `tbl_surat_panggilan` (`id`, `kasus_id`, `panggilan`, `terlapor`, `terlapor_json`, `menghadap_kepada`, `menghadap_kepada_json`, `tanggal`, `jam`, `tempat`, `status`, `pelanggaran`, `status_atasan`, `atasan`, `atasan_json`, `tanggal_surat`, `created_at`, `updated_at`) VALUES
-(7, 4, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2022-12-01', '10:55:00', 'Ruang Kepala BUHK', 1, 'Kode etik ASN', 1, '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2022-11-28', '2022-11-30 16:34:18', '2022-11-30 16:57:49'),
-(9, 3, 1, '130935363', '{\"nama\":\"Dra. ENDANG RETNO WINARTI, M. Pd.\",\"nip\":\"195909191981032003\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Lektor Kepala\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '130815346', '{\"nama\":\"Prof. Dr. Kartono, M. Si.\",\"nip\":\"195602221980031002\",\"pangkat\":\"IV\\/d - Pembina Utama Madya\",\"jabatan\":\"Profesor (Ketua Program Studi S2)\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '2023-01-18', '12:00:00', 'Rektorat', 1, 'Orasek', 1, '130815346', '{\"nama\":\"Prof. Dr. Kartono, M. Si.\",\"nip\":\"195602221980031002\",\"pangkat\":\"IV\\/d - Pembina Utama Madya\",\"jabatan\":\"Profesor (Ketua Program Studi S2)\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '2023-01-14', '2023-01-13 18:19:41', '2023-01-13 18:19:41'),
-(10, 4, 2, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-01-21', '13:00:00', 'Ruang Kepala BUHK', 2, 'Kode etik ASN', 1, '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-01-14', '2023-01-13 20:21:03', '2023-01-13 20:21:03'),
-(12, 5, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-23', '09:00:00', 'Gedung H Rektorat', 1, 'Kode etik ASN', 1, '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09', '2023-02-09 02:18:49', '2023-02-09 02:18:49'),
-(13, 6, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-02-24', '14:00:00', 'Ruang Kepala BUHK', 1, 'Hoax', 1, '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09', '2023-02-09 16:12:03', '2023-02-09 16:12:03');
+INSERT INTO `tbl_surat_panggilan` (`id`, `kasus_id`, `panggilan`, `terlapor`, `terlapor_json`, `nomor`, `menghadap_kepada`, `menghadap_kepada_json`, `tanggal`, `jam`, `tempat`, `status`, `pelanggaran`, `status_atasan`, `atasan`, `atasan_json`, `tanggal_surat`, `created_at`, `updated_at`) VALUES
+(7, 4, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2022-12-01', '10:55:00', 'Ruang Kepala BUHK', 1, 'Kode etik ASN', 1, '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2022-11-28', '2022-11-30 16:34:18', '2022-11-30 16:57:49'),
+(9, 3, 1, '130935363', '{\"nama\":\"Dra. ENDANG RETNO WINARTI, M. Pd.\",\"nip\":\"195909191981032003\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Lektor Kepala\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '', '130815346', '{\"nama\":\"Prof. Dr. Kartono, M. Si.\",\"nip\":\"195602221980031002\",\"pangkat\":\"IV\\/d - Pembina Utama Madya\",\"jabatan\":\"Profesor (Ketua Program Studi S2)\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '2023-01-18', '12:00:00', 'Rektorat', 1, 'Orasek', 1, '130815346', '{\"nama\":\"Prof. Dr. Kartono, M. Si.\",\"nip\":\"195602221980031002\",\"pangkat\":\"IV\\/d - Pembina Utama Madya\",\"jabatan\":\"Profesor (Ketua Program Studi S2)\",\"unit\":\"UNNES - FMIPA-Pendidikan Matematika\"}', '2023-01-14', '2023-01-13 18:19:41', '2023-01-13 18:19:41'),
+(10, 4, 2, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-01-21', '13:00:00', 'Ruang Kepala BUHK', 2, 'Kode etik ASN', 1, '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-01-14', '2023-01-13 20:21:03', '2023-01-13 20:21:03'),
+(12, 5, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengembang sistem informasi\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '', '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-23', '09:00:00', 'Gedung H Rektorat', 1, 'Kode etik ASN', 1, '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09', '2023-02-09 02:18:49', '2023-02-09 02:18:49'),
+(13, 6, 1, '199705262022031008', '{\"nama\":\"Fathurrahman Prasetyo Aji, S.Pd.\",\"nip\":\"199705262022031008\",\"pangkat\":\"III\\/a - Penata Muda\",\"jabatan\":\"Pengolah Data Kepegawaian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN - SUB BAGIAN PENDIDIK\"}', '001/SP/I/2023', '132094313', '{\"nama\":\"WIDI WIDAYAT, S. Pd.\",\"nip\":\"196803011995071001\",\"pangkat\":\"IV\\/b - Pembina Tk. I\",\"jabatan\":\"Kepala Biro Umum Hukum dan Kepegawaian\",\"unit\":\"UNNES - BUHK\"}', '2023-02-24', '14:00:00', 'Ruang Kepala BUHK', 1, 'Hoax', 1, '132308158', '{\"nama\":\"SITI MURSIDAH, S.Pd., M.Si.\",\"nip\":\"197710262005022001\",\"pangkat\":\"IV\\/a - Pembina\",\"jabatan\":\"Koordinator Bagian\",\"unit\":\"BUHK - BAGIAN HUKUM DAN KEPEGAWAIAN\"}', '2023-02-09', '2023-02-09 16:12:03', '2023-02-13 16:15:18');
 
 -- --------------------------------------------------------
 
@@ -896,7 +897,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `name`, `username`, `email`, `email_verified_at`, `password`, `remember_token`, `access_token`, `avatar`, `status`, `last_visit`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Admin', 'admin@admin.com', 'admin@admin.com', NULL, '$2y$10$DdFLeYLynqwb9FG89JY3v.FgGke7LAiAOVjXEBEHdRFm/WXkylxdu', NULL, 'uHRwq9JVxwNXwSHY8mDhgMBvM8TwSZBnbZ8EvfXu', NULL, 1, '2023-02-09 13:56:51', '2022-07-03 19:34:41', '2023-02-09 13:56:51');
+(1, 1, 'Admin', 'admin@admin.com', 'admin@admin.com', NULL, '$2y$10$DdFLeYLynqwb9FG89JY3v.FgGke7LAiAOVjXEBEHdRFm/WXkylxdu', NULL, 'uHRwq9JVxwNXwSHY8mDhgMBvM8TwSZBnbZ8EvfXu', NULL, 1, '2023-02-13 16:11:13', '2022-07-03 19:34:41', '2023-02-13 16:11:13');
 
 -- --------------------------------------------------------
 
@@ -991,7 +992,8 @@ INSERT INTO `visitors` (`id`, `user_id`, `ip_address`, `device`, `browser`, `pla
 (21, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 00:29:11', '2023-02-09 00:29:11'),
 (22, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 00:49:43', '2023-02-09 00:49:43'),
 (23, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 00:57:54', '2023-02-09 00:57:54'),
-(24, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 13:56:55', '2023-02-09 13:56:55');
+(24, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 94\",\"family\":\"Opera\",\"version\":\"94\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-09 13:56:55', '2023-02-09 13:56:55'),
+(25, 1, '127.0.0.1', '{\"type\":\"Desktop\",\"family\":\"Unknown\",\"model\":\"\",\"grade\":\"\"}', '{\"name\":\"Opera 95\",\"family\":\"Opera\",\"version\":\"95\",\"engine\":\"Blink\"}', '{\"name\":\"Windows 10\",\"family\":\"Windows\",\"version\":\"10\"}', '', '2023-02-13 16:11:17', '2023-02-13 16:11:17');
 
 --
 -- Indexes for dumped tables
@@ -1345,7 +1347,7 @@ ALTER TABLE `user_avatars`
 -- AUTO_INCREMENT for table `visitors`
 --
 ALTER TABLE `visitors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

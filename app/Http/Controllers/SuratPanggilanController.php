@@ -56,6 +56,7 @@ class SuratPanggilanController extends Controller
     {
         // Validation
         $validator = Validator::make($request->all(), [
+            'nomor' => 'required',
             'menghadap_kepada' => 'required',
             'tanggal' => 'required',
             'jam' => 'required',
@@ -110,6 +111,7 @@ class SuratPanggilanController extends Controller
                 'jabatan' => $simpeg_terlapor->jabatan,
                 'unit' => $simpeg_terlapor->nama_unit,
             ]);
+            $surat->nomor = $request->nomor;
             $surat->menghadap_kepada = $request->menghadap_kepada;
             $surat->menghadap_kepada_json = json_encode([
                 'nama' => fullname($simpeg_menghadap_kepada->nama, $simpeg_menghadap_kepada->gelar_dpn, $simpeg_menghadap_kepada->gelar_blk),

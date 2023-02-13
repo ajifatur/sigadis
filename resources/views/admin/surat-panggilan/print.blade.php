@@ -18,7 +18,7 @@
     <div id="judul">
         <div>Rahasia</div>
         <div>Surat Panggilan {{ $surat->panggilan }}</div>
-        <div>Nomor: .................................</div>
+        <div>Nomor: {{ $surat->nomor }}</div>
     </div>
     <table id="tabel-form">
         <tr>

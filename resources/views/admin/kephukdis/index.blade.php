@@ -23,6 +23,7 @@
                             <tr>
                                 <th width="30"><input type="checkbox" class="form-check-input checkbox-all"></th>
                                 <th>Terlapor</th>
+                                <th>Dugaan Pelanggaran</th>
                                 <th>Hukuman Disiplin</th>
                                 <th width="80">Tanggal Keputusan</th>
                                 <th width="40">Opsi</th>
@@ -38,6 +39,7 @@
                                     <br>
                                     <span class="small text-muted">{{ $terlapor->nip }}</span>
                                 </td>
+                                <td>{{ $k->dugaan_pelanggaran }}</td>
                                 <td>{{ $k->hukdis->nama }}</td>
                                 <td>
                                     <span class="d-none">{{ $k->tanggal_ditetapkan }}</span>

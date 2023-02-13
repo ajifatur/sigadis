@@ -25,6 +25,15 @@
                     </div>
                     <hr>
                     <div class="row mb-3">
+                        <label class="col-lg-2 col-md-3 col-form-label">Nomor <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <input type="text" name="nomor" class="form-control form-control-sm {{ $errors->has('nomor') ? 'border-danger' : '' }}" value="{{ $surat->nomor }}">
+                            @if($errors->has('nomor'))
+                            <div class="small text-danger">{{ $errors->first('nomor') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3">
                         <label class="col-lg-2 col-md-3 col-form-label">Menghadap Kepada <span class="text-danger">*</span></label>
                         <div class="col-lg-10 col-md-9">
                             <select name="menghadap_kepada" class="form-select form-select-sm {{ $errors->has('menghadap_kepada') ? 'border-danger' : '' }}" disabled>
