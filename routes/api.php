@@ -24,4 +24,9 @@ Route::get('/simpeg', function() {
     return response()->json($simpeg, 200);
 })->name('api.simpeg');
 
+Route::get('/tembusan', function() {
+    $tembusan = \App\Models\Tembusan::all();
+    return response()->json($tembusan, 200);
+})->name('api.tembusan');
+
 \Ajifatur\Helpers\RouteExt::api();
