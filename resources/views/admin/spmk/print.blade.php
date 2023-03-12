@@ -67,7 +67,7 @@
             <td>{{ \Ajifatur\Helpers\DateTimeExt::day($spmk->tanggal_menghadap) }}</td>
         </tr>
         <tr>
-            <td>Hari</td>
+            <td>Tanggal</td>
             <td>:</td>
             <td>{{ \Ajifatur\Helpers\DateTimeExt::full($spmk->tanggal_menghadap) }}</td>
         </tr>
@@ -99,8 +99,9 @@
     <div id="tembusan">
         Tembusan Yth :
         <ol>
-            <li>Rektor</li>
-            <li>Wakil Rektor Bid. Umum dan Keuangan</li>
+            @foreach($tembusan as $t)
+            <li>{{ $t->tembusan->name }}</li>
+            @endforeach
         </ol>
     </div>
 </body>

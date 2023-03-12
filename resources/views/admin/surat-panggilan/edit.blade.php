@@ -142,6 +142,20 @@
                         </div>
                     </div>
                     <hr>
+                    <div class="row mb-3">
+                        <label class="col-lg-2 col-md-3 col-form-label">Tembusan <span class="text-danger">*</span></label>
+                        <div class="col-lg-10 col-md-9">
+                            <select name="tembusan[]" class="form-select form-select-sm {{ $errors->has('tembusan') ? 'border-danger' : '' }}" data-url="{{ route('api.tembusan.store') }}" data-token="{{ csrf_token() }}" multiple>
+                                @foreach($tembusan as $t)
+                                <option value="{{ $t->id }}" {{ in_array($t->id, \App\Models\TembusanSurat::where('table_id','=',$surat->id)->where('table_name','=','tbl_surat_panggilan')->pluck('tembusan_id')->toArray()) ? 'selected' : '' }}>{{ $t->name }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('tembusan'))
+                            <div class="small text-danger">{{ $errors->first('tembusan') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <hr>
                     <div class="row">
                         <div class="col-lg-2 col-md-3"></div>
                         <div class="col-lg-10 col-md-9">
@@ -163,6 +177,10 @@
 <script>
     Spandiv.DatePicker("input[name=tanggal], input[name=tanggal_surat]");
     Spandiv.ClockPicker("input[name=jam]");
+    Spandiv.Select2("select[name='tembusan[]']", {
+        enableAddOption: true,
+        orderByClicked: true
+    });
     
     // Select2 Server Side
     $(window).on("load", function() {

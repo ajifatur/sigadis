@@ -9,6 +9,8 @@ use Ajifatur\Helpers\DateTimeExt;
 use PDF;
 use App\Models\Kasus;
 use App\Models\SuratPanggilan;
+use App\Models\Tembusan;
+use App\Models\TembusanSurat;
 
 class SuratPanggilanController extends Controller
 {
@@ -40,9 +42,13 @@ class SuratPanggilanController extends Controller
         // Kasus
         $kasus = Kasus::findOrFail($id);
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/surat-panggilan/create', [
-            'kasus' => $kasus
+            'kasus' => $kasus,
+            'tembusan' => $tembusan
         ]);
     }
 
@@ -66,6 +72,7 @@ class SuratPanggilanController extends Controller
             'status_atasan' => 'required',
             'atasan' => 'required',
             'tanggal_surat' => 'required',
+            'tembusan' => 'required',
         ]);
         
         // Check errors
@@ -137,6 +144,16 @@ class SuratPanggilanController extends Controller
             $surat->tanggal_surat = DateTimeExt::change($request->tanggal_surat);
             $surat->save();
 
+            // Simpan tembusan surat
+            TembusanSurat::where('table_id','=',$surat->id)->where('table_name','=','tbl_surat_panggilan')->delete();
+            foreach($request->tembusan as $t) {
+                $tembusan_surat = new TembusanSurat;
+                $tembusan_surat->tembusan_id = $t;
+                $tembusan_surat->table_id = $surat->id;
+                $tembusan_surat->table_name = 'tbl_surat_panggilan';
+                $tembusan_surat->save();
+            }
+
             // Redirect
             return redirect()->route('admin.kasus.detail', ['id' => $request->kasus_id])->with(['message' => 'Berhasil memperbarui data.']);
         }
@@ -160,10 +177,14 @@ class SuratPanggilanController extends Controller
         // Surat panggilan
         $surat = SuratPanggilan::findOrFail($surat_id);
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/surat-panggilan/edit', [
             'kasus' => $kasus,
-            'surat' => $surat
+            'surat' => $surat,
+            'tembusan' => $tembusan
         ]);
     }
 
@@ -212,12 +233,17 @@ class SuratPanggilanController extends Controller
             $surat->panggilan .= 'I';
         }
 
+        // Hari dan tanggal
         $surat->hariIndo = DateTimeExt::day($surat->tanggal);
         $surat->tanggalIndo = DateTimeExt::full($surat->tanggal);
 
+        // Tembusan
+        $tembusan = TembusanSurat::where('table_id','=',$surat->id)->where('table_name','=','tbl_surat_panggilan')->get();
+
         // PDF
         $pdf = PDF::loadView('admin/surat-panggilan/print', [
-            'surat' => $surat
+            'surat' => $surat,
+            'tembusan' => $tembusan
         ]);
         return $pdf->stream('Surat Panggilan '.$surat->panggilan.' - '.$surat->kasus->terduga_nip.'.pdf');
     }

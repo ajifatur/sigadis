@@ -119,8 +119,9 @@
     <div id="tembusan">
         Tembusan Yth :
         <ol>
-            <li>Rektor</li>
-            <li>Wakil Rektor Bid. Umum dan Keuangan</li>
+            @foreach($tembusan as $t)
+            <li>{{ $t->tembusan->name }}</li>
+            @endforeach
         </ol>
     </div>
 </body>

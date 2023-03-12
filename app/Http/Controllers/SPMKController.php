@@ -11,6 +11,8 @@ use App\Models\Kasus;
 use App\Models\SPMK;
 use App\Models\Pelanggaran;
 use App\Models\Hukdis;
+use App\Models\Tembusan;
+use App\Models\TembusanSurat;
 
 class SPMKController extends Controller
 {
@@ -54,6 +56,9 @@ class SPMKController extends Controller
         // Kephukdis
         $kephukdis = $kasus->kephukdis->first();
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/spmk/create', [
             'kasus' => $kasus,
@@ -61,6 +66,7 @@ class SPMKController extends Controller
             'atasan' => $atasan,
             'bap' => $bap,
             'kephukdis' => $kephukdis,
+            'tembusan' => $tembusan,
         ]);
     }
 
@@ -81,6 +87,7 @@ class SPMKController extends Controller
             'tanggal_menghadap' => 'required',
             'jam_menghadap' => 'required',
             'tempat_menghadap' => 'required',
+            'tembusan' => 'required',
         ]);
         
         // Check errors
@@ -151,6 +158,16 @@ class SPMKController extends Controller
             ]);
             $spmk->save();
 
+            // Simpan tembusan surat
+            TembusanSurat::where('table_id','=',$spmk->id)->where('table_name','=','tbl_spmk')->delete();
+            foreach($request->tembusan as $t) {
+                $tembusan_surat = new TembusanSurat;
+                $tembusan_surat->tembusan_id = $t;
+                $tembusan_surat->table_id = $spmk->id;
+                $tembusan_surat->table_name = 'tbl_spmk';
+                $tembusan_surat->save();
+            }
+
             // Redirect
             return redirect()->route('admin.kasus.detail', ['id' => $request->kasus_id])->with(['message' => 'Berhasil memperbarui data.']);
         }
@@ -186,6 +203,9 @@ class SPMKController extends Controller
         // Kephukdis
         $kephukdis = $kasus->kephukdis->first();
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/spmk/edit', [
             'kasus' => $kasus,
@@ -194,6 +214,7 @@ class SPMKController extends Controller
             'atasan' => $atasan,
             'bap' => $bap,
             'kephukdis' => $kephukdis,
+            'tembusan' => $tembusan
         ]);
     }
 
@@ -234,9 +255,13 @@ class SPMKController extends Controller
         $spmk->atasan_json = json_decode($spmk->atasan_json);
         $spmk->keputusan = $spmk->kasus->kephukdis->first();
 
+        // Tembusan
+        $tembusan = TembusanSurat::where('table_id','=',$spmk->id)->where('table_name','=','tbl_spmk')->get();
+
         // PDF
         $pdf = PDF::loadView('admin/spmk/print', [
-            'spmk' => $spmk
+            'spmk' => $spmk,
+            'tembusan' => $tembusan
         ]);
         return $pdf->stream('Surat Panggilan untuk Menerima Keputusan Hukdis - '.$spmk->kasus->terduga_nip.'.pdf');
     }

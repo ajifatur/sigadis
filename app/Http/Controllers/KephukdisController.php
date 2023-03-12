@@ -13,6 +13,8 @@ use App\Models\Kephukdis;
 use App\Models\Pelanggaran;
 use App\Models\Hukdis;
 use App\Models\SPMK;
+use App\Models\Tembusan;
+use App\Models\TembusanSurat;
 
 class KephukdisController extends Controller
 {
@@ -85,6 +87,9 @@ class KephukdisController extends Controller
             ['id' => 2, 'nama' => 'Rektor']
         ];
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/kephukdis/create', [
             'kasus' => $kasus,
@@ -94,6 +99,7 @@ class KephukdisController extends Controller
             'pelanggaran' => $pelanggaran,
             'hukdis' => $hukdis,
             'keputusan' => $keputusan,
+            'tembusan' => $tembusan,
         ]);
     }
 
@@ -121,6 +127,7 @@ class KephukdisController extends Controller
             'tukin' => in_array($request->hukdis, [4,5,6]) ? 'required' : '',
             'tmt_pengembalian' => in_array($request->hukdis, [4,5,6]) ? 'required' : '',
             'jabatan_setelah_diturunkan' => in_array($request->hukdis, [7]) ? 'required' : '',
+            'tembusan' => 'required',
         ]);
         
         // Check errors
@@ -166,6 +173,16 @@ class KephukdisController extends Controller
             $kephukdis->jabatan_pejabat = $request->jabatan_pejabat;
             $kephukdis->save();
 
+            // Simpan tembusan surat
+            TembusanSurat::where('table_id','=',$kephukdis->id)->where('table_name','=','tbl_kephukdis')->delete();
+            foreach($request->tembusan as $t) {
+                $tembusan_surat = new TembusanSurat;
+                $tembusan_surat->tembusan_id = $t;
+                $tembusan_surat->table_id = $kephukdis->id;
+                $tembusan_surat->table_name = 'tbl_kephukdis';
+                $tembusan_surat->save();
+            }
+
             // Redirect
             return redirect()->route('admin.kasus.detail', ['id' => $request->kasus_id])->with(['message' => 'Berhasil memperbarui data.']);
         }
@@ -210,6 +227,9 @@ class KephukdisController extends Controller
             ['id' => 2, 'nama' => 'Rektor']
         ];
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/kephukdis/edit', [
             'kasus' => $kasus,
@@ -220,6 +240,7 @@ class KephukdisController extends Controller
             'pelanggaran' => $pelanggaran,
             'hukdis' => $hukdis,
             'keputusan' => $keputusan,
+            'tembusan' => $tembusan
         ]);
     }
 
@@ -273,9 +294,13 @@ class KephukdisController extends Controller
         elseif(in_array($kephukdis->hukdis_id, [9]))
             $file = 'print-berat-3';
 
+        // Tembusan
+        $tembusan = TembusanSurat::where('table_id','=',$kephukdis->id)->where('table_name','=','tbl_kephukdis')->get();
+
         // PDF
         $pdf = PDF::loadView('admin/kephukdis/'.$file, [
-            'kephukdis' => $kephukdis
+            'kephukdis' => $kephukdis,
+            'tembusan' => $tembusan
         ]);
         return $pdf->stream('Keputusan Hukuman Disiplin - '.$kephukdis->kasus->terduga_nip.'.pdf');
     }

@@ -10,6 +10,8 @@ use PDF;
 use App\Models\Kasus;
 use App\Models\KPTS;
 use App\Models\Pelanggaran;
+use App\Models\Tembusan;
+use App\Models\TembusanSurat;
 
 class KPTSController extends Controller
 {
@@ -59,6 +61,9 @@ class KPTSController extends Controller
             ['id' => 2, 'nama' => 'Rektor']
         ];
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/kpts/create', [
             'kasus' => $kasus,
@@ -66,7 +71,8 @@ class KPTSController extends Controller
             'atasan' => $atasan,
             'bap' => $bap,
             'pelanggaran' => $pelanggaran,
-            'keputusan' => $keputusan
+            'keputusan' => $keputusan,
+            'tembusan' => $tembusan,
         ]);
     }
 
@@ -83,6 +89,7 @@ class KPTSController extends Controller
             'keputusan' => 'required',
             'tanggal_ditetapkan' => 'required',
             'tempat_ditetapkan' => 'required',
+            'tembusan' => 'required',
         ]);
         
         // Check errors
@@ -133,6 +140,16 @@ class KPTSController extends Controller
             ]);
             $kpts->save();
 
+            // Simpan tembusan surat
+            TembusanSurat::where('table_id','=',$kpts->id)->where('table_name','=','tbl_kpts')->delete();
+            foreach($request->tembusan as $t) {
+                $tembusan_surat = new TembusanSurat;
+                $tembusan_surat->tembusan_id = $t;
+                $tembusan_surat->table_id = $kpts->id;
+                $tembusan_surat->table_name = 'tbl_kpts';
+                $tembusan_surat->save();
+            }
+
             // Redirect
             return redirect()->route('admin.kasus.detail', ['id' => $request->kasus_id])->with(['message' => 'Berhasil memperbarui data.']);
         }
@@ -174,6 +191,9 @@ class KPTSController extends Controller
             ['id' => 2, 'nama' => 'Rektor']
         ];
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/kpts/edit', [
             'kasus' => $kasus,
@@ -183,6 +203,7 @@ class KPTSController extends Controller
             'bap' => $bap,
             'pelanggaran' => $pelanggaran,
             'keputusan' => $keputusan,
+            'tembusan' => $tembusan
         ]);
     }
 
@@ -221,9 +242,13 @@ class KPTSController extends Controller
         $kpts->terlapor_json = json_decode($kpts->terlapor_json);
         $kpts->atasan_json = json_decode($kpts->atasan_json);
 
+        // Tembusan
+        $tembusan = TembusanSurat::where('table_id','=',$kpts->id)->where('table_name','=','tbl_kpts')->get();
+
         // PDF
         $pdf = PDF::loadView('admin/kpts/print', [
-            'kpts' => $kpts
+            'kpts' => $kpts,
+            'tembusan' => $tembusan
         ]);
         return $pdf->stream('Keputusan Pembebasan Tugas Sementara - '.$kpts->kasus->terduga_nip.'.pdf');
     }

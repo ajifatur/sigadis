@@ -29,4 +29,10 @@ Route::get('/tembusan', function() {
     return response()->json($tembusan, 200);
 })->name('api.tembusan');
 
+Route::post('/tembusan/store', function(Request $request) {
+    $tembusan = new \App\Models\Tembusan;
+    $tembusan->name = $request->keyword;
+    $tembusan->save();
+})->name('api.tembusan.store');
+
 \Ajifatur\Helpers\RouteExt::api();

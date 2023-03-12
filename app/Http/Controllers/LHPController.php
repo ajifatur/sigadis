@@ -11,6 +11,8 @@ use App\Models\Kasus;
 use App\Models\LHP;
 use App\Models\Pelanggaran;
 use App\Models\Hukdis;
+use App\Models\Tembusan;
+use App\Models\TembusanSurat;
 
 class LHPController extends Controller
 {
@@ -57,6 +59,9 @@ class LHPController extends Controller
         // Hukdis
         $hukdis = Hukdis::all();
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/lhp/create', [
             'kasus' => $kasus,
@@ -65,6 +70,7 @@ class LHPController extends Controller
             'bap' => $bap,
             'pelanggaran' => $pelanggaran,
             'hukdis' => $hukdis,
+            'tembusan' => $tembusan,
         ]);
     }
 
@@ -83,6 +89,7 @@ class LHPController extends Controller
             'penerima_surat' => 'required',
             'tempat_penerima_surat' => 'required',
             'hukdis' => 'required',
+            'tembusan' => 'required',
         ]);
         
         // Check errors
@@ -153,6 +160,16 @@ class LHPController extends Controller
             $lhp->laporan = '';
             $lhp->save();
 
+            // Simpan tembusan surat
+            TembusanSurat::where('table_id','=',$lhp->id)->where('table_name','=','tbl_lhp')->delete();
+            foreach($request->tembusan as $t) {
+                $tembusan_surat = new TembusanSurat;
+                $tembusan_surat->tembusan_id = $t;
+                $tembusan_surat->table_id = $lhp->id;
+                $tembusan_surat->table_name = 'tbl_lhp';
+                $tembusan_surat->save();
+            }
+
             // Redirect
             return redirect()->route('admin.kasus.detail', ['id' => $request->kasus_id])->with(['message' => 'Berhasil memperbarui data.']);
         }
@@ -191,6 +208,9 @@ class LHPController extends Controller
         // Hukdis
         $hukdis = Hukdis::all();
 
+        // Tembusan
+        $tembusan = Tembusan::all();
+
         // View
         return view('admin/lhp/edit', [
             'kasus' => $kasus,
@@ -200,6 +220,7 @@ class LHPController extends Controller
             'bap' => $bap,
             'pelanggaran' => $pelanggaran,
             'hukdis' => $hukdis,
+            'tembusan' => $tembusan
         ]);
     }
 
@@ -239,9 +260,13 @@ class LHPController extends Controller
         $lhp->penerima_surat_json = json_decode($lhp->penerima_surat_json);
         $lhp->pelapor_json = json_decode($lhp->pelapor_json);
 
+        // Tembusan
+        $tembusan = TembusanSurat::where('table_id','=',$lhp->id)->where('table_name','=','tbl_lhp')->get();
+
         // PDF
         $pdf = PDF::loadView('admin/lhp/print', [
-            'lhp' => $lhp
+            'lhp' => $lhp,
+            'tembusan' => $tembusan
         ]);
         return $pdf->stream('Laporan Hasil Pemeriksaan - '.$lhp->kasus->terduga_nip.'.pdf');
     }
