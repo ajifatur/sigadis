@@ -31,17 +31,17 @@ class KephukdisController extends Controller
 
         // Keputusan hukuman disiplin
         if($request->query('hukdis') == 'ringan') {
-            $kephukdis = Kephukdis::whereHas('hukdis', function (Builder $query) {
+            $kephukdis = Kephukdis::has('kasus')->whereHas('hukdis', function (Builder $query) {
                 return $query->where('jenis_id','=',1);
             })->orderBy('created_at','desc')->get();
         }
         elseif($request->query('hukdis') == 'sedang') {
-            $kephukdis = Kephukdis::whereHas('hukdis', function (Builder $query) {
+            $kephukdis = Kephukdis::has('kasus')->whereHas('hukdis', function (Builder $query) {
                 return $query->where('jenis_id','=',2);
             })->orderBy('created_at','desc')->get();
         }
         elseif($request->query('hukdis') == 'berat') {
-            $kephukdis = Kephukdis::whereHas('hukdis', function (Builder $query) {
+            $kephukdis = Kephukdis::has('kasus')->whereHas('hukdis', function (Builder $query) {
                 return $query->where('jenis_id','=',3);
             })->orderBy('created_at','desc')->get();
         }
@@ -279,7 +279,7 @@ class KephukdisController extends Controller
         // has_access(method(__METHOD__), Auth::user()->role_id);
 
         // Keputusan hukuman disiplin
-        $kephukdis = Kephukdis::findOrFail($id);
+        $kephukdis = Kephukdis::has('kasus')->findOrFail($id);
         $kephukdis->terlapor_json = json_decode($kephukdis->terlapor_json);
 
         // File
