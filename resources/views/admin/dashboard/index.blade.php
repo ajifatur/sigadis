@@ -13,10 +13,22 @@
         <p class="mb-0">Selamat datang kembali <strong>{{ Auth::user()->name }}</strong> di {{ setting('name') }} ({{ setting('tagline') }}).</p>
     </div>
 </div>
-<div class="card shadow">
-	<div class="card-body">
-		<p class="card-text">Peraturan Pemerintah Nomor 94 Tahun 2021 tentang Disiplin Pegawai Negeri Sipil.</p>
-		<a href="{{ asset('assets/pdf/PP Nomor 94 Tahun 2021.pdf') }}" class="btn btn-sm btn-primary" target="_blank"><i class="bi-download"></i> Unduh</a>
+<div class="row">
+	<div class="col-sm-6 mb-3">
+		<div class="card h-100 shadow">
+			<div class="card-body">
+				<p class="card-text">Peraturan Pemerintah Nomor 94 Tahun 2021 tentang Disiplin Pegawai Negeri Sipil.</p>
+				<a href="{{ asset('assets/pdf/PP Nomor 94 Tahun 2021.pdf') }}" class="btn btn-sm btn-primary" target="_blank"><i class="bi-download"></i> Unduh</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6 mb-3">
+		<div class="card h-100 shadow">
+			<div class="card-body">
+				<p class="card-text">Panduan Penggunaan SIGADIS (Sistem Informasi Penegakan Disiplin dan Etika Pegawai).</p>
+				<a href="{{ asset('assets/pdf/PP Nomor 94 Tahun 2021.pdf') }}" class="btn btn-sm btn-warning" target="_blank"><i class="bi-download"></i> Unduh</a>
+			</div>
+		</div>
 	</div>
 </div>
 
