@@ -30,9 +30,16 @@ Route::get('/tembusan', function() {
 })->name('api.tembusan');
 
 Route::post('/tembusan/store', function(Request $request) {
+    // Simpan tembusan
     $tembusan = new \App\Models\Tembusan;
     $tembusan->name = $request->keyword;
     $tembusan->save();
+
+    // JSON
+    return response()->json([
+        'id' => $tembusan->id,
+        'keyword' => $tembusan->name
+    ]);
 })->name('api.tembusan.store');
 
 \Ajifatur\Helpers\RouteExt::api();
