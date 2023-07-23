@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "364be629a6ab3b708c76b7c7a73749b1",
+    "content-hash": "2d6de9aae3bd43d7a9c191cb547baabd",
     "packages": [
         {
             "name": "ajifatur/faturhelper",
-            "version": "v3.4.9",
+            "version": "v4.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ajifatur/faturhelper.git",
-                "reference": "501fb097af63b01c63de5dbe91809374ac9b3f69"
+                "reference": "dd167b3b0b5b4200fc4dbfd864faf1ff32362d1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ajifatur/faturhelper/zipball/501fb097af63b01c63de5dbe91809374ac9b3f69",
-                "reference": "501fb097af63b01c63de5dbe91809374ac9b3f69",
+                "url": "https://api.github.com/repos/ajifatur/faturhelper/zipball/dd167b3b0b5b4200fc4dbfd864faf1ff32362d1c",
+                "reference": "dd167b3b0b5b4200fc4dbfd864faf1ff32362d1c",
                 "shasum": ""
             },
             "require": {
@@ -46,9 +46,9 @@
             "description": "Project that contains some helpers/functions/methods to help my work easier",
             "support": {
                 "issues": "https://github.com/ajifatur/faturhelper/issues",
-                "source": "https://github.com/ajifatur/faturhelper/tree/v3.4.9"
+                "source": "https://github.com/ajifatur/faturhelper/tree/v4.0.5"
             },
-            "time": "2023-03-04T17:02:15+00:00"
+            "time": "2023-07-23T10:48:41+00:00"
         },
         {
             "name": "asm89/stack-cors",
